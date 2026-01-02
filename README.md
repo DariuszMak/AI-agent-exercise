@@ -37,7 +37,7 @@ uv run pytest test/ --cov=src -vv ;
 
 ##### RUN APPLICATION LOCALLY
 
-# Start-Process uv -ArgumentList "run", "python", "src\main.py test\examples\1\source\input_timesheet.csv" ; 
+# Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 ```
 
 
