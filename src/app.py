@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify
 from pathlib import Path
-import numpy as np
 
-from src.rag.loader import load_documents
+import numpy as np
+from flask import Flask, jsonify, request
+
 from src.rag.embeddings import embed
 from src.rag.index import create_index
+from src.rag.loader import load_documents
 from src.rag.retriever import search
 
 DOCUMENTS_PATH = Path("storage/documents")
+
 
 def create_app() -> Flask:
     app = Flask(__name__)
@@ -22,10 +24,7 @@ def create_app() -> Flask:
         documents = load_documents(DOCUMENTS_PATH)
         index = create_index()
 
-        vectors = np.array(
-            [embed(doc["text"]) for doc in documents],
-            dtype="float32"
-        )
+        vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
 
         index.add(vectors)
 
