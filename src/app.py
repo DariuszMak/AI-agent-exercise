@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-from flask import Flask, Response, jsonify, request
+from flask import Flask, jsonify, request
 
 from src.rag.embeddings import embed
 from src.rag.index import create_index
@@ -18,7 +18,7 @@ def create_app() -> Flask:
     index = None
 
     @app.post("/index")
-    def build_index():
+    def build_index() -> tuple[dict[str, object], int] | dict[str, int]:
         nonlocal documents, index
 
         documents = load_documents(DOCUMENTS_PATH)
@@ -35,7 +35,7 @@ def create_app() -> Flask:
         return {"indexed": len(documents)}
 
     @app.post("/query")
-    def query() -> Response:
+    def query() -> str:
         data = request.json
         results = search(index, documents, data["query"])
         return jsonify(results)
