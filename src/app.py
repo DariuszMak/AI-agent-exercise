@@ -22,6 +22,10 @@ def create_app() -> Flask:
         nonlocal documents, index
 
         documents = load_documents(DOCUMENTS_PATH)
+
+        if not documents:
+            return {"indexed": 0, "warning": "no documents found"}, 200
+
         index = create_index()
 
         vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
@@ -31,7 +35,7 @@ def create_app() -> Flask:
         return {"indexed": len(documents)}
 
     @app.post("/query")
-    def query():
+    def query() -> dict:
         data = request.json
         results = search(index, documents, data["query"])
         return jsonify(results)
