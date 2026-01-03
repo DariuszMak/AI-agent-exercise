@@ -1,4 +1,4 @@
-import faiss
+import faiss # type: ignore[import-untyped]
 
 DIM = 384
 
