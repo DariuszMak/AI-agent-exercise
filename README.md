@@ -36,8 +36,11 @@ $env:PYTHONPATH="." ;
 uv run pytest test/ --cov=src -vv ; 
 # uv run pytest test/ -m slow --cov=src -vv ; 
 # uv run pytest test/ -m "not slow" --cov=src -vv ; 
+```
 
-##### RUN APPLICATION LOCALLY
+## Local run:
+
+```
 
 # Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 
@@ -49,7 +52,7 @@ curl -X POST http://127.0.0.1:5000/query `
 ```
 
 
-## Code linting
+## Code linting:
 
 ```commandline
 .venv\Scripts\Activate.ps1 ; 
@@ -69,7 +72,7 @@ uv run mypy --strict test src ;
 ```
 
 
-## Code autoformat
+## Code autoformat:
 
 ```commandline
 .venv\Scripts\Activate.ps1 ; 
