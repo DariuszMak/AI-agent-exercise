@@ -42,8 +42,8 @@ uv run pytest test/ --cov=src -vv ;
 curl -X POST http://127.0.0.1:5000/index ; 
 
 curl -X POST http://127.0.0.1:5000/query `
-  -H "Content-Type: application/json" `
-  -d '{\"query\":\"What is KSeF?\"}' ; 
+-H "Content-Type: application/json" `
+-d '{"query":"What is KSeF?"}'
 ```
 
 
