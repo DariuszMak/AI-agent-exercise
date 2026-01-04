@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import numpy as np
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Response, jsonify, make_response, request
 
 from src.rag.embeddings import embed
 from src.rag.index import create_index
@@ -37,7 +37,7 @@ def create_app() -> Flask:
     @app.post("/query")
     def query() -> Response:
         if index is None:
-            return jsonify({"error": "index not built"}), 400
+            return make_response(jsonify({"error": "index not built"}), 400)
 
         data = request.json
         results = search(index, documents, data["query"])
