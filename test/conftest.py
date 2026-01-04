@@ -5,7 +5,9 @@ from src.app import create_app
 
 
 @pytest.fixture()
-def client() -> FlaskClient:
-    app = create_app()
+def client(tmp_path) -> FlaskClient:
+    docs = tmp_path / "documents"
+    docs.mkdir()
+    app = create_app(docs)
     app.config["TESTING"] = True
     return app.test_client()

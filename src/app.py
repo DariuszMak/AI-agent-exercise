@@ -8,10 +8,10 @@ from src.rag.index import create_index
 from src.rag.loader import load_documents
 from src.rag.retriever import search
 
-DOCUMENTS_PATH = Path("storage/documents")
+DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
 
 
-def create_app() -> Flask:
+def create_app(documents_path: Path = DEFAULT_DOCUMENTS_PATH) -> Flask:
     app = Flask(__name__)
 
     documents = []
@@ -21,15 +21,13 @@ def create_app() -> Flask:
     def build_index() -> tuple[dict[str, object], int] | dict[str, int]:
         nonlocal documents, index
 
-        documents = load_documents(DOCUMENTS_PATH)
+        documents = load_documents(documents_path)
 
         if not documents:
             return {"indexed": 0, "warning": "no documents found"}, 200
 
         index = create_index()
-
         vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
-
         index.add(vectors)
 
         return {"indexed": len(documents)}
@@ -39,7 +37,10 @@ def create_app() -> Flask:
         if index is None:
             return make_response(jsonify({"error": "index not built"}), 400)
 
-        data = request.json
+        data = request.get_json(silent=True)
+        if not data or "query" not in data or not isinstance(data["query"], str):
+            return make_response(jsonify({"error": "invalid query"}), 400)
+
         results = search(index, documents, data["query"])
         return jsonify(results)
 
