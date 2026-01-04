@@ -38,6 +38,12 @@ uv run pytest test/ --cov=src -vv ;
 ##### RUN APPLICATION LOCALLY
 
 # Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
+
+curl -X POST http://127.0.0.1:5000/index ; 
+
+curl -X POST http://127.0.0.1:5000/query `
+  -H "Content-Type: application/json" `
+  -d '{\"query\":\"What is Flask?\"}'
 ```
 
 
