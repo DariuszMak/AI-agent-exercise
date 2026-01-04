@@ -36,6 +36,9 @@ def create_app() -> Flask:
 
     @app.post("/query")
     def query() -> Response:
+        if index is None:
+            return jsonify({"error": "index not built"}), 400
+
         data = request.json
         results = search(index, documents, data["query"])
         return jsonify(results)

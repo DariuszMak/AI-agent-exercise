@@ -13,5 +13,17 @@ def search(
     k: int = 3,
 ) -> list[dict[str, str]]:
     query_vec = np.array([embed(query)], dtype="float32")
-    _, ids = index.search(query_vec, k)
-    return [documents[i] for i in ids[0]]
+    scores, ids = index.search(query_vec, k)
+
+    results = []
+    for rank, i in enumerate(ids[0]):
+        results.append(
+            {
+                "id": documents[i]["id"],
+                "chunk_id": documents[i]["chunk_id"],
+                "score": float(scores[0][rank]),
+                "text": documents[i]["text"],
+            }
+        )
+
+    return results
