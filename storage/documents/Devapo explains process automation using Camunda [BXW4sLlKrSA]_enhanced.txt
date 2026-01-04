@@ -1,0 +1,1 @@
+Hello guys, welcome to the WAPA channel. In this series of tutorials, we will bring some light into the business cases of process automation. In each video, we will focus on the technical side of Komundo Engine and we will present various solutions related to business process management. Stay tuned and remember to follow our channel. Thank you. 
