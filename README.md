@@ -37,7 +37,6 @@ uv run pytest test/ --cov=src -vv ;
 # uv run pytest test/ -m slow --cov=src -vv ; 
 # uv run pytest test/ -m "not slow" --cov=src -vv ; 
 
-
 ##### RUN APPLICATION LOCALLY
 
 # Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
