@@ -41,14 +41,25 @@ uv run pytest test/ --cov=src -vv ;
 ## Local run:
 
 ```
+Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
 
-# Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
+#####
 
-curl -X POST http://127.0.0.1:5000/index ; 
+Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST ; 
 
-curl -X POST http://127.0.0.1:5000/query `
--H "Content-Type: application/json" `
--d '{"query":"What is KSeF?"}'
+#####
+
+# Prepare JSON body
+$body = @{ query = "What is KSeF?" } | ConvertTo-Json
+
+# Call the Flask query endpoint
+$response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
+    -Method POST `
+    -Body $body `
+    -ContentType "application/json"
+
+# Print the results
+$response
 ```
 
 
