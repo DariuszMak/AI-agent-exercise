@@ -34,6 +34,9 @@ $env:PYTHONPATH="." ;
 .\scripts\format_and_lint.ps1 ; 
 
 uv run pytest test/ --cov=src -vv ; 
+# uv run pytest test/ -m slow --cov=src -vv ; 
+# uv run pytest test/ -m "not slow" --cov=src -vv ; 
+
 
 ##### RUN APPLICATION LOCALLY
 
