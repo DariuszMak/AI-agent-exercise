@@ -12,7 +12,7 @@ _client = OpenAI(
 def generate_answer(
     question: str,
     context_chunks: Iterable[str],
-    model: str = "llama3.1",
+    model: str = "llama3",
 ) -> str:
     context = "\n\n".join(context_chunks)
 
