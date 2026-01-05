@@ -7,6 +7,7 @@ from src.rag.embeddings import embed
 from src.rag.index import create_index
 from src.rag.loader import load_documents
 from src.rag.retriever import search
+from src.rag.llm import generate_answer
 
 DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
 
@@ -38,10 +39,34 @@ def create_app(documents_path: Path = DEFAULT_DOCUMENTS_PATH) -> Flask:
             return make_response(jsonify({"error": "index not built"}), 400)
 
         data = request.get_json(silent=True)
-        if not data or "query" not in data or not isinstance(data["query"], str):
+        if not data or "query" not in data:
             return make_response(jsonify({"error": "invalid query"}), 400)
 
         results = search(index, documents, data["query"])
         return jsonify(results)
+
+    @app.post("/ask")
+    def ask() -> Response:
+        if index is None:
+            return make_response(jsonify({"error": "index not built"}), 400)
+
+        data = request.get_json(silent=True)
+        if not data or "question" not in data:
+            return make_response(jsonify({"error": "invalid question"}), 400)
+
+        question = data["question"]
+
+        retrieved = search(index, documents, question, k=5)
+        context_chunks = [r["text"] for r in retrieved]
+
+        answer = generate_answer(question, context_chunks)
+
+        return jsonify(
+            {
+                "question": question,
+                "answer": answer,
+                "sources": retrieved,
+            }
+        )
 
     return app

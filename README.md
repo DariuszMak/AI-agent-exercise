@@ -4,12 +4,19 @@
 
 - [UV](https://github.com/astral-sh/uv) package manager
 
+## Environment variables (`.env` file):
+
+```
+OPENAI_API_KEY="ollama"
+OPENAI_BASE_URL="http://localhost:11434/v1"
+```
 
 ## Local development (Windows PowerShell):
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-## Fast native Windows development:
+
+### Fast native Windows development:
 
 ```commandline
 deactivate ; 
@@ -38,7 +45,7 @@ uv run pytest test/ --cov=src -vv ;
 # uv run pytest test/ -m "not slow" --cov=src -vv ; 
 ```
 
-## Local run:
+### Local run:
 
 ```
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
@@ -62,8 +69,7 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
 $response
 ```
 
-
-## Code linting:
+### Code linting:
 
 ```commandline
 .venv\Scripts\Activate.ps1 ; 
@@ -82,8 +88,7 @@ uv run mypy --strict test src ;
 # uv run mypy --strict test src ; 
 ```
 
-
-## Code autoformat:
+### Code autoformat:
 
 ```commandline
 .venv\Scripts\Activate.ps1 ; 
