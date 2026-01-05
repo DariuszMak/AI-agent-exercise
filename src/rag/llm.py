@@ -4,15 +4,15 @@ from collections.abc import Iterable
 from openai import OpenAI
 
 _client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
-    base_url=os.environ.get("OPENAI_BASE_URL"),
+    api_key=os.environ.get("OPENAI_API_KEY", "ollama"),
+    base_url=os.environ.get("OPENAI_BASE_URL", "http://localhost:11434/v1"),
 )
 
 
 def generate_answer(
     question: str,
     context_chunks: Iterable[str],
-    model: str = "gpt-4o-mini",
+    model: str = "llama3.1",
 ) -> str:
     context = "\n\n".join(context_chunks)
 
