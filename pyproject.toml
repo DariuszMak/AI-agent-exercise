@@ -192,3 +192,6 @@ line-ending = "auto"
 filterwarnings = [
   "ignore:.*SwigPy.*:DeprecationWarning",
 ]
+markers = [
+  "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
