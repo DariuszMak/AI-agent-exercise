@@ -51,10 +51,10 @@ def create_app(documents_path: Path = DEFAULT_DOCUMENTS_PATH) -> Flask:
             return make_response(jsonify({"error": "index not built"}), 400)
 
         data = request.get_json(silent=True)
-        if not data or "question" not in data:
+        if not data or "query" not in data:
             return make_response(jsonify({"error": "invalid question"}), 400)
 
-        question = data["question"]
+        question = data["query"]
 
         retrieved = search(index, documents, question, k=5)
         context_chunks = [r["text"] for r in retrieved]
