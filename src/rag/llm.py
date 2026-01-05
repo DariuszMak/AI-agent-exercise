@@ -36,4 +36,9 @@ PYTANIE:
         temperature=0.0,
     )
 
-    return response.choices[0].message.content.strip()
+    message = response.choices[0].message.content
+
+    if message is None:
+        return ""
+
+    return message.strip()
