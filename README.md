@@ -4,17 +4,9 @@
 
 - [UV](https://github.com/astral-sh/uv) package manager
 
-## Environment variables (`.env` file):
-
-```
-OPENAI_API_KEY="ollama"
-OPENAI_BASE_URL="http://localhost:11434/v1"
-```
-
 ## Local development (Windows PowerShell):
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
-
 
 ### Fast native Windows development:
 
@@ -34,6 +26,9 @@ uv sync --dev --no-cache ;
 uv lock ; 
 
 ##### STATIC ANALYSIS & TESTS
+
+$env:OPENAI_API_KEY="ollama" ; 
+$env:OPENAI_BASE_URL="http://localhost:11434/v1" ; 
 
 .venv\Scripts\Activate.ps1 ; 
 $env:PYTHONPATH="." ; 

@@ -5,9 +5,9 @@ from flask import Flask, Response, jsonify, make_response, request
 
 from src.rag.embeddings import embed
 from src.rag.index import create_index
+from src.rag.llm import generate_answer
 from src.rag.loader import load_documents
 from src.rag.retriever import search
-from src.rag.llm import generate_answer
 
 DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
 
