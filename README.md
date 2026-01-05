@@ -8,6 +8,13 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
+### Environment variables:
+
+```commandline
+$env:OPENAI_API_KEY="ollama" ; 
+$env:OPENAI_BASE_URL="http://localhost:11434/v1" ; 
+```
+
 ### Fast native Windows development:
 
 ```commandline
@@ -26,9 +33,6 @@ uv sync --dev --no-cache ;
 uv lock ; 
 
 ##### STATIC ANALYSIS & TESTS
-
-$env:OPENAI_API_KEY="ollama" ; 
-$env:OPENAI_BASE_URL="http://localhost:11434/v1" ; 
 
 .venv\Scripts\Activate.ps1 ; 
 $env:PYTHONPATH="." ; 
