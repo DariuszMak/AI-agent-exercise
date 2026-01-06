@@ -1,7 +1,8 @@
 from pathlib import Path
 
-import pytest
 from flask.testing import FlaskClient
+
+
 # test/test_rag_integration.py
 def test_index_and_query_polish(client: FlaskClient, tmp_path: Path) -> None:
     docs = tmp_path / "documents"
