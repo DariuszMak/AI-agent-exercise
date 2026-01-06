@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 import pytest
 from flask import Flask
@@ -23,7 +24,7 @@ def app_with_docs(tmp_path: Path) -> Flask:
 
 
 @pytest.fixture()
-def client(app_with_docs) -> FlaskClient:
+def client(app_with_docs: Flask) -> Any:
     return app_with_docs.test_client()
 
 
