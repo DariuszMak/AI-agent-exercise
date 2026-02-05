@@ -8,13 +8,6 @@
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-### Environment variables:
-
-```commandline
-$env:OPENAI_API_KEY="ollama" ; 
-$env:OPENAI_BASE_URL="http://localhost:11434/v1" ; 
-```
-
 ### Fast native Windows development:
 
 ```commandline
