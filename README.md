@@ -14,6 +14,19 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
+$ports = 5000
+
+foreach ($port in $ports) {
+    $conn = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+    if ($conn) {
+        $pid = $conn.OwningProcess
+        Write-Host "Port $port is used by PID $pid. Killing..."
+        Stop-Process -Id $pid -Force
+    } else {
+        Write-Host "No process is using port $port."
+    }
+}
+
 Copy-Item .env.example .env -Force
 
 uv self update ; 
