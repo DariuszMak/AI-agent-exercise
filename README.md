@@ -14,6 +14,8 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
+Copy-Item .env.example .env -Force
+
 uv self update ; 
 uv cache clean ; 
 
