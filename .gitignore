@@ -1,3 +1,6 @@
+storage/*.faiss
+storage/*.pkl
+
 moc_*.py
 files_rc.py
 
