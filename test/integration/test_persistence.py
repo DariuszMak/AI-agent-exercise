@@ -11,7 +11,7 @@ def test_index_persistence(tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir()
 
-    # Create a test document
+    
     (docs / "a.txt").write_text(
         "KSeF to system do faktur.",
         encoding="utf-8",
@@ -20,14 +20,14 @@ def test_index_persistence(tmp_path: Path) -> None:
     index_path = tmp_path / "index.faiss"
     docstore_path = tmp_path / "documents.pkl"
 
-    # ----------------------
-    # First app instance: build index and persist
-    # ----------------------
+    
+    
+    
     app1 = create_app(
         documents_path=docs,
         index_path=index_path,
         docstore_path=docstore_path,
-        autoload=False,  # no autoload, we are building index
+        autoload=False,  
     )
     app1.config["TESTING"] = True
     client1: FlaskClient = app1.test_client()
@@ -36,23 +36,23 @@ def test_index_persistence(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert response.get_json()["indexed"] > 0
 
-    # Ensure persistence files exist
+    
     assert index_path.exists()
     assert docstore_path.exists()
 
-    # ----------------------
-    # Second app instance: simulate restart with autoload
-    # ----------------------
+    
+    
+    
     app2 = create_app(
         documents_path=docs,
         index_path=index_path,
         docstore_path=docstore_path,
-        autoload=True,  # ✅ load persisted index/documents
+        autoload=True,  
     )
     app2.config["TESTING"] = True
     client2: FlaskClient = app2.test_client()
 
-    # Should work without rebuilding index
+    
     response = client2.post("/query", json={"query": "Czym jest KSeF?"})
     assert response.status_code == 200
 
