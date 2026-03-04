@@ -19,13 +19,15 @@ def create_app(
     documents_path: Path = DEFAULT_DOCUMENTS_PATH,
     index_path: Path = DEFAULT_INDEX_PATH,
     docstore_path: Path = DEFAULT_DOCSTORE_PATH,
+    autoload: bool = False,  # <- explicit flag
 ) -> Flask:
     app = Flask(__name__)
 
     documents = []
     index = None
 
-    if not app.config.get("TESTING") and index_path.exists() and docstore_path.exists():
+    # Auto-load persisted index and documents only if autoload=True
+    if autoload and index_path.exists() and docstore_path.exists():
         index = load_index(index_path)
         with docstore_path.open("rb") as f:
             documents = pickle.load(f)
