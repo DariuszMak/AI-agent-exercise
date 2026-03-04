@@ -13,21 +13,20 @@ from src.rag.retriever import search
 
 DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
 DEFAULT_INDEX_PATH = Path("storage/index.faiss")
-DEFAULT_DOCSTORE_PATH = Path("storage/documents.json")  
+DEFAULT_DOCSTORE_PATH = Path("storage/documents.json")
 
 
 def create_app(
     documents_path: Path = DEFAULT_DOCUMENTS_PATH,
     index_path: Path = DEFAULT_INDEX_PATH,
     docstore_path: Path = DEFAULT_DOCSTORE_PATH,
-    autoload: bool = False,  
+    autoload: bool = False,
 ) -> Flask:
     app = Flask(__name__)
 
     documents = []
     index = None
 
-    
     if autoload and index_path.exists() and docstore_path.exists():
         index = load_index(index_path)
         with docstore_path.open("r", encoding="utf-8") as f:
@@ -37,17 +36,14 @@ def create_app(
     def build_index() -> tuple[dict[str, object], int] | dict[str, int]:
         nonlocal documents, index
 
-        
         documents = load_documents(documents_path)
         if not documents:
             return {"indexed": 0, "warning": "no documents found"}, 200
 
-        
         index = create_index()
         vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
         index.add(vectors)
 
-        
         save_index(index, index_path)
         with docstore_path.open("w", encoding="utf-8") as f:
             json.dump(documents, f, ensure_ascii=False)
