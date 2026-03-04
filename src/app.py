@@ -25,8 +25,7 @@ def create_app(
     documents = []
     index = None
 
-    # 🔥 auto-load on startup
-    if index_path.exists() and docstore_path.exists():
+    if not app.config.get("TESTING") and index_path.exists() and docstore_path.exists():
         index = load_index(index_path)
         with docstore_path.open("rb") as f:
             documents = pickle.load(f)
