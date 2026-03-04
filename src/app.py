@@ -1,8 +1,9 @@
-import pickle
+import json
 from pathlib import Path
+from typing import Any
 
 import numpy as np
-from flask import Flask, Response, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request
 
 from src.rag.embeddings import embed
 from src.rag.index import create_index, load_index, save_index
@@ -12,50 +13,49 @@ from src.rag.retriever import search
 
 DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
 DEFAULT_INDEX_PATH = Path("storage/index.faiss")
-DEFAULT_DOCSTORE_PATH = Path("storage/documents.pkl")
+DEFAULT_DOCSTORE_PATH = Path("storage/documents.json")  # JSON instead of pickle
 
 
 def create_app(
     documents_path: Path = DEFAULT_DOCUMENTS_PATH,
     index_path: Path = DEFAULT_INDEX_PATH,
     docstore_path: Path = DEFAULT_DOCSTORE_PATH,
-    autoload: bool = False,  # <- explicit flag
+    autoload: bool = False,  # explicit flag for auto-loading persisted index/documents
 ) -> Flask:
     app = Flask(__name__)
 
     documents = []
     index = None
 
-    # Auto-load persisted index and documents only if autoload=True
+    # Load persisted index and documents if autoload=True
     if autoload and index_path.exists() and docstore_path.exists():
         index = load_index(index_path)
-        with docstore_path.open("rb") as f:
-            documents = pickle.load(f)
+        with docstore_path.open("r", encoding="utf-8") as f:
+            documents = json.load(f)
 
     @app.post("/index")
-    def build_index():
+    def build_index() -> tuple[dict[str, object], int] | dict[str, int]:
         nonlocal documents, index
 
+        # Load documents from disk
         documents = load_documents(documents_path)
-
         if not documents:
             return {"indexed": 0, "warning": "no documents found"}, 200
 
+        # Create FAISS index and add embeddings
         index = create_index()
         vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
         index.add(vectors)
 
-        # ✅ persist
-        index_path.parent.mkdir(parents=True, exist_ok=True)
+        # Persist index and documents
         save_index(index, index_path)
-
-        with docstore_path.open("wb") as f:
-            pickle.dump(documents, f)
+        with docstore_path.open("w", encoding="utf-8") as f:
+            json.dump(documents, f, ensure_ascii=False)
 
         return {"indexed": len(documents)}
 
     @app.post("/query")
-    def query() -> Response:
+    def query() -> Any:
         if index is None:
             return make_response(jsonify({"error": "index not built"}), 400)
 
@@ -67,7 +67,7 @@ def create_app(
         return jsonify(results)
 
     @app.post("/ask")
-    def ask() -> Response:
+    def ask() -> Any:
         if index is None:
             return make_response(jsonify({"error": "index not built"}), 400)
 
@@ -76,7 +76,6 @@ def create_app(
             return make_response(jsonify({"error": "invalid question"}), 400)
 
         question = data["query"]
-
         retrieved = search(index, documents, question, k=5)
         context_chunks = [r["text"] for r in retrieved]
 
