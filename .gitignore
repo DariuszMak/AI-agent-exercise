@@ -1,5 +1,5 @@
 storage/*.faiss
-storage/*.pkl
+storage/*.json
 
 moc_*.py
 files_rc.py
