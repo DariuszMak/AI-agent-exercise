@@ -32,8 +32,6 @@ def load_index(path: Path) -> faiss.Index:
 
 @dataclass
 class IndexStore:
-
-
     index: faiss.Index | None = field(default=None)
     documents: list[dict[str, Any]] = field(default_factory=list)
 
