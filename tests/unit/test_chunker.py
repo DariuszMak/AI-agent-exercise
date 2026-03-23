@@ -24,7 +24,7 @@ def test_single_short_text_is_one_chunk() -> None:
 
 
 def test_long_text_produces_multiple_chunks() -> None:
-    
+
     sentence = "This is a moderately long sentence used for testing purposes. "
     text = sentence * 60
     chunks = list(chunk_text(text, chunk_tokens=256, overlap_tokens=32))
@@ -32,13 +32,13 @@ def test_long_text_produces_multiple_chunks() -> None:
 
 
 def test_overlap_means_last_sentences_repeated() -> None:
-    
+
     sentence = "Sentence number {}. "
     text = "".join(sentence.format(i) for i in range(80))
     chunks = list(chunk_text(text, chunk_tokens=64, overlap_tokens=16))
     assert len(chunks) >= 2
-    
-    last_in_first = chunks[0].text.split(". ")[-2]  
+
+    last_in_first = chunks[0].text.split(". ")[-2]
     assert last_in_first in chunks[1].text
 
 
@@ -47,9 +47,7 @@ def test_token_count_within_budget() -> None:
     text = sentence * 100
     budget = 128
     chunks = list(chunk_text(text, chunk_tokens=budget, overlap_tokens=16))
-    
-    
-    
+
     for c in chunks:
         assert c.token_count <= budget * 2
 
@@ -65,7 +63,6 @@ def test_whitespace_only_yields_nothing() -> None:
 def test_char_offsets_are_non_overlapping() -> None:
     text = "Alpha beta. Gamma delta. Epsilon zeta. " * 30
     chunks = list(chunk_text(text, chunk_tokens=32, overlap_tokens=8))
-    
-    
+
     starts = [c.char_start for c in chunks]
     assert starts == sorted(starts)

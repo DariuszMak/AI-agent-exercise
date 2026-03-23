@@ -25,10 +25,6 @@ def create_app(
 ) -> Flask:
     app = Flask(__name__)
 
-    
-    
-    
-    
     store = IndexStore()
     if autoload and index_path.exists() and docstore_path.exists():
         store = IndexStore.load(index_path, docstore_path)

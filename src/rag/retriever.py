@@ -9,7 +9,7 @@ from .embeddings import embed
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    import faiss  
+    import faiss  # type: ignore[import-untyped]
 
 
 def search(

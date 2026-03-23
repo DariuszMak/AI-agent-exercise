@@ -49,7 +49,6 @@ def test_load_documents_multiple_files_sorted(tmp_path: Path) -> None:
     documents = load_documents(docs)
     ids = [d["id"] for d in documents]
 
-    
     first_a = next(i for i, x in enumerate(ids) if x == "a.txt")
     first_b = next(i for i, x in enumerate(ids) if x == "b.txt")
     assert first_a < first_b

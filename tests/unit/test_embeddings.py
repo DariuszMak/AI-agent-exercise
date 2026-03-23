@@ -7,10 +7,8 @@ def test_model_not_loaded_on_import() -> None:
     """Importing embeddings must not trigger model initialisation."""
     import src.rag.embeddings as emb
 
-    
     emb._model = None
 
-    
     assert emb._model is None
 
 
@@ -26,7 +24,6 @@ def test_get_model_initialises_once() -> None:
         m1 = emb.get_model()
         m2 = emb.get_model()
 
-    
     mock_cls.assert_called_once()
     assert m1 is m2
 

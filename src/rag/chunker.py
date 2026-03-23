@@ -15,11 +15,10 @@ try:
     def _token_len(text: str) -> int:
         return len(_enc.encode(text))
 
-except ImportError:  
+except ImportError:
 
     def _token_len(text: str) -> int:
         return int(len(text.split()) * 1.3)
-
 
 
 _SENT_RE = re.compile(r"(?<=[.?!])\s+|\n{2,}|\n")
@@ -39,7 +38,7 @@ def chunk_text(
     overlap_tokens: int = 32,
 ) -> Iterator[Chunk]:
 
-    sentences: list[tuple[str, int, int]] = []  
+    sentences: list[tuple[str, int, int]] = []
     cursor = 0
     for part in _SENT_RE.split(text):
         part = part.strip()
@@ -70,7 +69,6 @@ def chunk_text(
         if window_tokens + sent_tokens > chunk_tokens and window:
             yield _emit(window)
 
-            
             while window and window_tokens > overlap_tokens:
                 dropped_tokens = _token_len(window[0][0])
                 window.pop(0)
