@@ -62,7 +62,7 @@ Start-Process uv -ArgumentList "run", "python", "src\main.py" ;
 
 Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST ; 
 
-#####
+##########
 
 # Prepare JSON body
 $body = @{ query = "What is KSeF?" } | ConvertTo-Json
@@ -75,7 +75,7 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
 
 $response
 
-#####
+##########
 
 $body = @{ query = "What is KSEF?" } | ConvertTo-Json
 
@@ -98,5 +98,4 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
     -ContentType "application/json"
 
 $response
-
 ```
