@@ -9,7 +9,7 @@ from .embeddings import embed
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    import faiss  # type: ignore[import-untyped]
+    import faiss  
 
 
 def search(
@@ -30,7 +30,6 @@ def search(
                 "chunk_id": doc["chunk_id"],
                 "score": float(scores[0][rank]),
                 "text": doc["text"],
-                # surface the extra metadata so callers can debug retrieval
                 "token_count": doc.get("token_count"),
                 "char_start": doc.get("char_start"),
                 "char_end": doc.get("char_end"),

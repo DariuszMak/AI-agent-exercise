@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 import faiss  # type: ignore[import-untyped]
 import numpy as np
 
-from src.rag.embeddings import embed  # module-level so tests can patch src.rag.index.embed
+from src.rag.embeddings import embed  
 
 if TYPE_CHECKING:
     from pathlib import Path

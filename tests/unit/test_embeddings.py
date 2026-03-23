@@ -7,10 +7,10 @@ def test_model_not_loaded_on_import() -> None:
     """Importing embeddings must not trigger model initialisation."""
     import src.rag.embeddings as emb
 
-    # Reset singleton so this test is order-independent
+    
     emb._model = None
 
-    # The model should still be None — no eager load
+    
     assert emb._model is None
 
 
@@ -26,7 +26,7 @@ def test_get_model_initialises_once() -> None:
         m1 = emb.get_model()
         m2 = emb.get_model()
 
-    # Constructor called exactly once despite two get_model() calls
+    
     mock_cls.assert_called_once()
     assert m1 is m2
 

@@ -25,10 +25,10 @@ def create_app(
 ) -> Flask:
     app = Flask(__name__)
 
-    # Store lives in app.config — injectable, mockable, no closure magic.
-    # Each Gunicorn worker calls create_app(autoload=True) independently
-    # and reads the persisted files into its own IndexStore.  FAISS reads
-    # are safe to do concurrently from separate processes.
+    
+    
+    
+    
     store = IndexStore()
     if autoload and index_path.exists() and docstore_path.exists():
         store = IndexStore.load(index_path, docstore_path)

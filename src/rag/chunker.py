@@ -15,13 +15,13 @@ try:
     def _token_len(text: str) -> int:
         return len(_enc.encode(text))
 
-except ImportError:  # fallback: approximate 1 word ≈ 1.3 tokens
+except ImportError:  
 
     def _token_len(text: str) -> int:
         return int(len(text.split()) * 1.3)
 
 
-# Sentence-boundary split pattern: splits on ". ", "? ", "! ", "\n\n", "\n"
+
 _SENT_RE = re.compile(r"(?<=[.?!])\s+|\n{2,}|\n")
 
 
@@ -38,22 +38,8 @@ def chunk_text(
     chunk_tokens: int = 256,
     overlap_tokens: int = 32,
 ) -> Iterator[Chunk]:
-    """
-    Split *text* into token-bounded chunks that respect sentence boundaries.
 
-    Strategy
-    --------
-    1. Split the text on sentence boundaries first.
-    2. Greedily pack sentences into a window until adding the next sentence
-       would exceed *chunk_tokens*.
-    3. When the window is full, emit a Chunk and slide forward by
-       *chunk_tokens - overlap_tokens* worth of tokens, keeping the tail
-       sentences for the next window (semantic overlap, not arbitrary
-       character slicing).
-    4. A single sentence that exceeds *chunk_tokens* on its own is emitted
-       as-is rather than dropped — the caller handles oversized chunks.
-    """
-    sentences: list[tuple[str, int, int]] = []  # (text, char_start, char_end)
+    sentences: list[tuple[str, int, int]] = []  
     cursor = 0
     for part in _SENT_RE.split(text):
         part = part.strip()
@@ -84,7 +70,7 @@ def chunk_text(
         if window_tokens + sent_tokens > chunk_tokens and window:
             yield _emit(window)
 
-            # slide: drop sentences from the front until we're within overlap budget
+            
             while window and window_tokens > overlap_tokens:
                 dropped_tokens = _token_len(window[0][0])
                 window.pop(0)
