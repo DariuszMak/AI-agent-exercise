@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 try:
     import tiktoken
@@ -13,6 +16,7 @@ try:
         return len(_enc.encode(text))
 
 except ImportError:  # fallback: approximate 1 word ≈ 1.3 tokens
+
     def _token_len(text: str) -> int:  # type: ignore[misc]
         return int(len(text.split()) * 1.3)
 

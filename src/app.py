@@ -61,7 +61,7 @@ def create_app(
         if not data or "query" not in data:
             return make_response(jsonify({"error": "invalid query"}), 400)
 
-        assert s.index is not None  # noqa: S101 — guarded by s.ready
+        assert s.index is not None
         results = search(s.index, s.documents, data["query"])
         return jsonify(results)
 
@@ -76,7 +76,7 @@ def create_app(
             return make_response(jsonify({"error": "invalid question"}), 400)
 
         question = data["query"]
-        assert s.index is not None  # noqa: S101 — guarded by s.ready
+        assert s.index is not None
         retrieved = search(s.index, s.documents, question, k=5)
         context_chunks = [r["text"] for r in retrieved]
 

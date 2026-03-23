@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .chunker import chunk_text
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def load_documents(path: Path) -> list[dict[str, Any]]:

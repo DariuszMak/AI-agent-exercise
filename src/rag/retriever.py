@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import faiss  # type: ignore[import-untyped]
 import numpy as np
 
 from .embeddings import embed
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    import faiss
 
 
 def search(
