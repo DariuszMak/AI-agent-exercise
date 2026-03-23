@@ -32,28 +32,7 @@ def load_index(path: Path) -> faiss.Index:
 
 @dataclass
 class IndexStore:
-    """
-    Holds the FAISS index and its associated document metadata together.
 
-    Rationale
-    ---------
-    The original design stored the index inside a Flask app-factory closure.
-    That works fine for a single process but breaks under multi-worker
-    deployments (Gunicorn pre-fork model) because each worker gets its own
-    copy of the closure — and the index is never populated in workers that
-    didn't run ``/index``.
-
-    By making IndexStore an explicit object that lives in ``app.config``,
-    we gain:
-
-    - Injectability: tests can construct a pre-populated store without HTTP.
-    - Mockability: swap the store object for a stub in unit tests.
-    - Worker safety: each worker calls ``IndexStore.load()`` in its own
-      ``@app.before_request`` or via ``create_app(autoload=True)``, reading
-      the same persisted files independently.  FAISS read is thread-safe.
-    - Future migration: replacing FAISS with pgvector or Pinecone is a
-      one-class change rather than surgery on the app factory.
-    """
 
     index: faiss.Index | None = field(default=None)
     documents: list[dict[str, Any]] = field(default_factory=list)

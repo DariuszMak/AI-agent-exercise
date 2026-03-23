@@ -80,7 +80,6 @@ def test_save_raises_when_empty(tmp_path: Path) -> None:
 
 
 def test_multiple_workers_load_same_files(tmp_path: Path, sample_docs: list[dict[str, Any]]) -> None:
-    """Simulate two workers independently loading the same persisted index."""
     index_path = tmp_path / "index.faiss"
     docstore_path = tmp_path / "docs.json"
 

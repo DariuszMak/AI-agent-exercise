@@ -4,7 +4,6 @@ import numpy as np
 
 
 def test_model_not_loaded_on_import() -> None:
-    """Importing embeddings must not trigger model initialisation."""
     import src.rag.embeddings as emb
 
     emb._model = None

@@ -13,15 +13,7 @@ _model: SentenceTransformer | None = None
 
 
 def get_model() -> SentenceTransformer:
-    """
-    Return the embedding model, initialising it on first call.
 
-    Using a lazy singleton means:
-    - Importing this module never loads 90 MB of weights.
-    - Test suites that mock ``get_model`` pay zero model-load cost.
-    - Gunicorn workers each call this once after forking, which is safe
-      because ``SentenceTransformer`` is not fork-unsafe.
-    """
     global _model
     if _model is None:
         logger.info("Loading embedding model %s", _MODEL_NAME)
