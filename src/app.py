@@ -36,7 +36,8 @@ def create_app(
     app.config[_STORE_KEY] = store
 
     def _store() -> IndexStore:
-        return app.config[_STORE_KEY]  # type: ignore[return-value]
+        result: IndexStore = app.config[_STORE_KEY]
+        return result
 
     @app.post("/index")
     def build_index() -> tuple[dict[str, object], int] | dict[str, int]:

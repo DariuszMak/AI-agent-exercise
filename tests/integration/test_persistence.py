@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -12,7 +13,7 @@ def _fake_embed(text: str) -> np.ndarray:
     return v / np.linalg.norm(v)
 
 
-def _patch_embed():
+def _patch_embed() -> Any:
     mock_st = MagicMock()
     instance = MagicMock()
     instance.encode.side_effect = _fake_embed

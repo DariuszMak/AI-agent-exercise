@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING, Any
 import faiss  # type: ignore[import-untyped]
 import numpy as np
 
+from src.rag.embeddings import embed  # module-level so tests can patch src.rag.index.embed
+
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -61,8 +63,6 @@ class IndexStore:
         return self.index is not None and len(self.documents) > 0
 
     def build(self, documents: list[dict[str, Any]]) -> None:
-        from src.rag.embeddings import embed  # local import avoids eager load
-
         idx = create_index()
         vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
         idx.add(vectors)

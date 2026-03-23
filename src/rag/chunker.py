@@ -17,7 +17,7 @@ try:
 
 except ImportError:  # fallback: approximate 1 word ≈ 1.3 tokens
 
-    def _token_len(text: str) -> int:  # type: ignore[misc]
+    def _token_len(text: str) -> int:
         return int(len(text.split()) * 1.3)
 
 

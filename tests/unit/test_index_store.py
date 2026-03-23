@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import numpy as np
@@ -14,7 +15,7 @@ def _fake_embed(text: str) -> np.ndarray:
 
 
 @pytest.fixture()
-def sample_docs() -> list[dict]:
+def sample_docs() -> list[dict[str, Any]]:
     return [
         {
             "id": "a.txt",
@@ -40,21 +41,21 @@ def test_store_not_ready_when_empty() -> None:
     assert not store.ready
 
 
-def test_store_ready_after_build(sample_docs: list[dict]) -> None:
+def test_store_ready_after_build(sample_docs: list[dict[str, Any]]) -> None:
     with patch("src.rag.index.embed", side_effect=_fake_embed):
         store = IndexStore()
         store.build(sample_docs)
     assert store.ready
 
 
-def test_build_populates_documents(sample_docs: list[dict]) -> None:
+def test_build_populates_documents(sample_docs: list[dict[str, Any]]) -> None:
     with patch("src.rag.index.embed", side_effect=_fake_embed):
         store = IndexStore()
         store.build(sample_docs)
     assert len(store.documents) == len(sample_docs)
 
 
-def test_save_and_load_roundtrip(tmp_path: Path, sample_docs: list[dict]) -> None:
+def test_save_and_load_roundtrip(tmp_path: Path, sample_docs: list[dict[str, Any]]) -> None:
     index_path = tmp_path / "index.faiss"
     docstore_path = tmp_path / "docs.json"
 
@@ -78,7 +79,7 @@ def test_save_raises_when_empty(tmp_path: Path) -> None:
         store.save(tmp_path / "i.faiss", tmp_path / "d.json")
 
 
-def test_multiple_workers_load_same_files(tmp_path: Path, sample_docs: list[dict]) -> None:
+def test_multiple_workers_load_same_files(tmp_path: Path, sample_docs: list[dict[str, Any]]) -> None:
     """Simulate two workers independently loading the same persisted index."""
     index_path = tmp_path / "index.faiss"
     docstore_path = tmp_path / "docs.json"
