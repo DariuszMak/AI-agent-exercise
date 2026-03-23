@@ -12,7 +12,7 @@ def _fake_embed(text: str) -> np.ndarray:
     return v / np.linalg.norm(v)
 
 
-def _patch_embed():  # noqa: ANN201
+def _patch_embed():
     mock_st = MagicMock()
     instance = MagicMock()
     instance.encode.side_effect = _fake_embed

@@ -1,5 +1,5 @@
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -16,8 +16,22 @@ def _fake_embed(text: str) -> np.ndarray:
 @pytest.fixture()
 def sample_docs() -> list[dict]:
     return [
-        {"id": "a.txt", "chunk_id": "0", "text": "KSeF is an invoicing system.", "token_count": 6, "char_start": 0, "char_end": 28},
-        {"id": "a.txt", "chunk_id": "1", "text": "It is used in Poland.", "token_count": 5, "char_start": 29, "char_end": 50},
+        {
+            "id": "a.txt",
+            "chunk_id": "0",
+            "text": "KSeF is an invoicing system.",
+            "token_count": 6,
+            "char_start": 0,
+            "char_end": 28,
+        },
+        {
+            "id": "a.txt",
+            "chunk_id": "1",
+            "text": "It is used in Poland.",
+            "token_count": 5,
+            "char_start": 29,
+            "char_end": 50,
+        },
     ]
 
 

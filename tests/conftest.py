@@ -23,6 +23,7 @@ def client(tmp_path: Path) -> FlaskClient:
         instance.encode.side_effect = lambda t: _fake_embed(t)
         mock_st.return_value = instance
         import src.rag.embeddings as emb
+
         emb._model = None
         app = create_app(docs)
     app.config["TESTING"] = True

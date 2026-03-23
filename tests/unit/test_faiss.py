@@ -16,7 +16,14 @@ def _fake_embed(text: str) -> np.ndarray:
 @pytest.fixture()
 def populated_store() -> IndexStore:
     documents = [
-        {"id": "1", "chunk_id": "0", "text": "KSeF to system faktur", "token_count": 4, "char_start": 0, "char_end": 21},
+        {
+            "id": "1",
+            "chunk_id": "0",
+            "text": "KSeF to system faktur",
+            "token_count": 4,
+            "char_start": 0,
+            "char_end": 21,
+        },
         {"id": "2", "chunk_id": "0", "text": "Kot siedzi na dachu", "token_count": 4, "char_start": 0, "char_end": 19},
     ]
     with patch("src.rag.index.embed", side_effect=_fake_embed):
