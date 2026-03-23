@@ -77,7 +77,7 @@ $response
 
 #####
 
-$body = @{ query = "What is TM Forum OpenAPI and in which industry is it used?" } | ConvertTo-Json
+$body = @{ query = "What is KSEF?" } | ConvertTo-Json
 
 # Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
