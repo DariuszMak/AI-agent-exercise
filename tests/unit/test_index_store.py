@@ -1,11 +1,13 @@
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
 import numpy as np
 import pytest
 
 from src.rag.index import IndexStore
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _fake_embed(text: str) -> np.ndarray:

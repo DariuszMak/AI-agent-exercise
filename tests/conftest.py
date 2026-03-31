@@ -1,11 +1,15 @@
-from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
-from flask.testing import FlaskClient
 
 from src.app import create_app
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from flask.testing import FlaskClient
 
 
 def _fake_embed(text: str) -> np.ndarray:

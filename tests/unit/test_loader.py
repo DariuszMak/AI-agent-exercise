@@ -1,6 +1,10 @@
-from pathlib import Path
+
+from typing import TYPE_CHECKING
 
 from src.rag.loader import load_documents
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_load_documents_returns_chunks(tmp_path: Path) -> None:
