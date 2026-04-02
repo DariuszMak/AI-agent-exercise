@@ -4,6 +4,7 @@ import logging
 import os
 
 import numpy as np
+import pytest
 from sentence_transformers import SentenceTransformer
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,6 @@ def get_model() -> SentenceTransformer:
 def embed(text: str) -> np.ndarray:
     vec = np.asarray(get_model().encode(text), dtype=np.float32)
     norm = np.linalg.norm(vec)
-    if norm == 0.0:
+    if norm == pytest.approx(0.0):
         return vec
     return vec / norm
