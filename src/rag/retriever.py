@@ -24,16 +24,14 @@ def search(
     results = []
     for rank, i in enumerate(ids[0]):
         doc = documents[i]
-        results.append(
-            {
-                "id": doc["id"],
-                "chunk_id": doc["chunk_id"],
-                "score": float(scores[0][rank]),
-                "text": doc["text"],
-                "token_count": doc.get("token_count"),
-                "char_start": doc.get("char_start"),
-                "char_end": doc.get("char_end"),
-            }
-        )
+        results.append({
+            "id": doc["id"],
+            "chunk_id": doc["chunk_id"],
+            "score": float(scores[0][rank]),
+            "text": doc["text"],
+            "token_count": doc.get("token_count"),
+            "char_start": doc.get("char_start"),
+            "char_end": doc.get("char_end"),
+        })
 
     return results
