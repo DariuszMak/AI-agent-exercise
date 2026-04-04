@@ -27,8 +27,6 @@ foreach ($port in $ports) {
     }
 }
 
-Copy-Item .env.example .env -Force
-
 uv self update ; 
 uv cache clean ; 
 
@@ -43,7 +41,7 @@ uv lock ;
 ##### STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-$env:PYTHONPATH="." ; 
+$env:UV_ENV_FILE = "dev.env" ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
