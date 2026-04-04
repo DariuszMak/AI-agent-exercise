@@ -33,8 +33,8 @@ uv cache clean ;
 git reset --hard HEAD ; 
 git clean -x -d -f ; 
 
-uv python install 3.11 ; 
-uv python pin 3.11 ; 
+uv python install 3.14 ; 
+uv python pin 3.14 ; 
 uv sync --dev --no-cache ; 
 uv lock ; 
 
@@ -45,9 +45,9 @@ $env:UV_ENV_FILE = "dev.env" ;
 
 .\scripts\format_and_lint.ps1 ; 
 
-uv run pytest test/ --cov=src -vv ; 
-# uv run pytest test/ -m slow --cov=src -vv ; 
-# uv run pytest test/ -m "not slow" --cov=src -vv ; 
+uv run pytest tests/ --cov=src -vv ; 
+# uv run pytest tests/ -m slow --cov=src -vv ; 
+# uv run pytest tests/ -m "not slow" --cov=src -vv ; 
 
 ##### LOCAL RUN:
 
@@ -57,10 +57,9 @@ Start-Process uv -ArgumentList "run", "python", "src\main.py" ;
 ### INVOKE API REQUESTS:
 
 ```commandline
-
 Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST ; 
 
-#####
+##########
 
 # Prepare JSON body
 $body = @{ query = "What is KSeF?" } | ConvertTo-Json
@@ -73,9 +72,21 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
 
 $response
 
+##########
+
+$body = @{ query = "What is KSEF?" } | ConvertTo-Json
+
+# Call the Flask query endpoint
+$response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
+    -Method POST `
+    -Body $body `
+    -ContentType "application/json"
+
+$response
+
 #####
 
-$body = @{ query = "What is KSeF?" } | ConvertTo-Json
+$body = @{ query = "What is lista faktur?" } | ConvertTo-Json
 
 # Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `

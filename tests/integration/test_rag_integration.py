@@ -1,7 +1,11 @@
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-from flask.testing import FlaskClient
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from flask.testing import FlaskClient
 
 
 def test_index_and_query(client: FlaskClient, tmp_path: Path) -> None:

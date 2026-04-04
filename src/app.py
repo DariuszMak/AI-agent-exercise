@@ -1,53 +1,71 @@
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Any
 
-import numpy as np
-from flask import Flask, Response, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request
 
-from src.rag.embeddings import embed
-from src.rag.index import create_index
+from src.rag.index import IndexStore
 from src.rag.llm import generate_answer
 from src.rag.loader import load_documents
 from src.rag.retriever import search
 
 DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
+DEFAULT_INDEX_PATH = Path("storage/index.faiss")
+DEFAULT_DOCSTORE_PATH = Path("storage/documents.json")
+
+_STORE_KEY = "INDEX_STORE"
 
 
-def create_app(documents_path: Path = DEFAULT_DOCUMENTS_PATH) -> Flask:
+def create_app(
+    documents_path: Path = DEFAULT_DOCUMENTS_PATH,
+    index_path: Path = DEFAULT_INDEX_PATH,
+    docstore_path: Path = DEFAULT_DOCSTORE_PATH,
+    autoload: bool = False,
+) -> Flask:
     app = Flask(__name__)
 
-    documents = []
-    index = None
+    store = IndexStore()
+    if autoload and index_path.exists() and docstore_path.exists():
+        store = IndexStore.load(index_path, docstore_path)
+
+    app.config[_STORE_KEY] = store
+
+    def _store() -> IndexStore:
+        result: IndexStore = app.config[_STORE_KEY]
+        return result
 
     @app.post("/index")
     def build_index() -> tuple[dict[str, object], int] | dict[str, int]:
-        nonlocal documents, index
-
         documents = load_documents(documents_path)
-
         if not documents:
             return {"indexed": 0, "warning": "no documents found"}, 200
 
-        index = create_index()
-        vectors = np.array([embed(doc["text"]) for doc in documents], dtype="float32")
-        index.add(vectors)
+        s = IndexStore()
+        s.build(documents)
+        s.save(index_path, docstore_path)
+        app.config[_STORE_KEY] = s
 
         return {"indexed": len(documents)}
 
     @app.post("/query")
-    def query() -> Response:
-        if index is None:
+    def query() -> Any:
+        s = _store()
+        if not s.ready:
             return make_response(jsonify({"error": "index not built"}), 400)
 
         data = request.get_json(silent=True)
         if not data or "query" not in data:
             return make_response(jsonify({"error": "invalid query"}), 400)
 
-        results = search(index, documents, data["query"])
+        assert s.index is not None
+        results = search(s.index, s.documents, data["query"])
         return jsonify(results)
 
     @app.post("/ask")
-    def ask() -> Response:
-        if index is None:
+    def ask() -> Any:
+        s = _store()
+        if not s.ready:
             return make_response(jsonify({"error": "index not built"}), 400)
 
         data = request.get_json(silent=True)
@@ -55,18 +73,11 @@ def create_app(documents_path: Path = DEFAULT_DOCUMENTS_PATH) -> Flask:
             return make_response(jsonify({"error": "invalid question"}), 400)
 
         question = data["query"]
-
-        retrieved = search(index, documents, question, k=5)
+        assert s.index is not None
+        retrieved = search(s.index, s.documents, question, k=5)
         context_chunks = [r["text"] for r in retrieved]
 
         answer = generate_answer(question, context_chunks)
-
-        return jsonify(
-            {
-                "question": question,
-                "answer": answer,
-                "sources": retrieved,
-            }
-        )
+        return jsonify({"question": question, "answer": answer, "sources": retrieved})
 
     return app

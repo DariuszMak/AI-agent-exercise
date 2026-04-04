@@ -1,11 +1,14 @@
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
-from flask import Flask
-from flask.testing import FlaskClient
 
 from src.app import create_app
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from flask import Flask
+    from flask.testing import FlaskClient
 
 
 @pytest.fixture()
