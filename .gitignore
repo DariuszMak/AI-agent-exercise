@@ -1,5 +1,5 @@
-storage/*.faiss
-storage/*.json
+storage/**/*.faiss
+storage/**/*.json
 
 moc_*.py
 files_rc.py
