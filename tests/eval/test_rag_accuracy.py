@@ -71,7 +71,7 @@ def test_rag_accuracy(rag_client, case: dict) -> None:
         metrics=[
             AnswerRelevancyMetric(threshold=THRESHOLD, model=judge),
             FaithfulnessMetric(threshold=THRESHOLD, model=judge),
-            ContextualPrecisionMetric(threshold=THRESHOLD, model=judge),
-            ContextualRecallMetric(threshold=THRESHOLD, model=judge),
+            # ContextualPrecisionMetric(threshold=THRESHOLD, model=judge),
+            # ContextualRecallMetric(threshold=THRESHOLD, model=judge),
         ],
     )

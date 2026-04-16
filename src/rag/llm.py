@@ -1,21 +1,35 @@
 import os
-from typing import TYPE_CHECKING
+from functools import lru_cache
+from typing import Iterable
 
 from openai import OpenAI
 
-if TYPE_CHECKING:
-    from collections.abc import Iterable
-
-_client = OpenAI(
+_CLIENT = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "ollama"),
     base_url=os.environ.get("OPENAI_BASE_URL", "http://localhost:11434/v1"),
+    timeout=30.0,
 )
+
+
+@lru_cache(maxsize=256)
+def _cached_completion(prompt: str, model: str) -> str:
+    response = _CLIENT.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": "Jesteś pomocnym asystentem RAG."},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.0,
+    )
+
+    content = response.choices[0].message.content
+    return content.strip() if content else ""
 
 
 def generate_answer(
     question: str,
     context_chunks: Iterable[str],
-    model: str = "llama3",
+    model: str = "phi3",
 ) -> str:
     context = "\n\n".join(context_chunks)
 
@@ -30,18 +44,4 @@ PYTANIE:
 {question}
 """.strip()
 
-    response = _client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": "Jesteś pomocnym asystentem RAG."},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.0,
-    )
-
-    message = response.choices[0].message.content
-
-    if message is None:
-        return ""
-
-    return message.strip()
+    return _cached_completion(prompt, model)
