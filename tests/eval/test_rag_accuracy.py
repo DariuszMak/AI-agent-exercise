@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import pytest
 from deepeval import assert_test
-from deepeval.metrics import AnswerRelevancyMetric, ContextualPrecisionMetric, ContextualRecallMetric, FaithfulnessMetric
+from deepeval.metrics import (
+    AnswerRelevancyMetric,
+    ContextualPrecisionMetric,
+    ContextualRecallMetric,
+    FaithfulnessMetric,
+)
 from deepeval.test_case import LLMTestCase
 
 from src.app import create_app
-
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
 
 DOCUMENTS_PATH_STR = "storage/documents/EN"
 
@@ -25,15 +26,9 @@ def rag_client():
     app.config["TESTING"] = True
     client = app.test_client()
 
-    # Build index if not already persisted
     r = client.post("/index")
     assert r.status_code == 200, f"Index build failed: {r.get_json()}"
     return client
-
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
 
 
 def ask(client, question: str) -> tuple[str, list[str]]:
@@ -45,10 +40,6 @@ def ask(client, question: str) -> tuple[str, list[str]]:
     contexts: list[str] = [s["text"] for s in data["sources"]]
     return answer, contexts
 
-
-# ---------------------------------------------------------------------------
-# Test cases — edit these to match your actual document content
-# ---------------------------------------------------------------------------
 
 TEST_CASES = [
     {
@@ -66,11 +57,7 @@ TEST_CASES = [
 ]
 
 
-# ---------------------------------------------------------------------------
-# Accuracy metrics
-# ---------------------------------------------------------------------------
-
-THRESHOLD = 0.6  # tune this — 0.0–1.0
+THRESHOLD = 0.6
 
 answer_relevancy = AnswerRelevancyMetric(threshold=THRESHOLD)
 faithfulness = FaithfulnessMetric(threshold=THRESHOLD)
