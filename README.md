@@ -74,7 +74,7 @@ $response
 
 ##########
 
-$body = @{ query = "What is KSEF?" } | ConvertTo-Json
+$body = @{ query = "What is Camunda?" } | ConvertTo-Json
 
 # Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
@@ -86,7 +86,7 @@ $response
 
 #####
 
-$body = @{ query = "What is lista faktur?" } | ConvertTo-Json
+$body = @{ query = "What is Devapo?" } | ConvertTo-Json
 
 # Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
