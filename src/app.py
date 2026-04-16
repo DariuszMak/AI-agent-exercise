@@ -10,9 +10,11 @@ from src.rag.llm import generate_answer
 from src.rag.loader import load_documents
 from src.rag.retriever import search
 
-DEFAULT_DOCUMENTS_PATH = Path("storage/documents")
+GENERAL_DOC_PATH = "storage/documents"
+
+DEFAULT_DOCUMENTS_PATH = Path(GENERAL_DOC_PATH)
 DEFAULT_INDEX_PATH = Path("storage/index.faiss")
-DEFAULT_DOCSTORE_PATH = Path("storage/documents.json")
+DEFAULT_DOCSTORE_PATH = Path(GENERAL_DOC_PATH + ".json")
 
 _STORE_KEY = "INDEX_STORE"
 
