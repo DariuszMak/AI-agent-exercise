@@ -10,7 +10,7 @@ from src.rag.llm import generate_answer
 from src.rag.loader import load_documents
 from src.rag.retriever import search
 
-GENERAL_DOC_PATH = "storage/documents"
+GENERAL_DOC_PATH = "storage/documents/EN"
 
 DEFAULT_DOCUMENTS_PATH = Path(GENERAL_DOC_PATH)
 DEFAULT_INDEX_PATH = Path("storage/index.faiss")
