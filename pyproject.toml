@@ -15,6 +15,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "deepeval>=3.9.7",
     "mypy>=1.16.0",
     "pip-audit>=2.9.0",
     "pytest>=8.4.0",
