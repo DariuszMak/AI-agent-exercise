@@ -1,8 +1,11 @@
 import os
 from functools import lru_cache
-from typing import Iterable
+from typing import TYPE_CHECKING
 
 from openai import OpenAI
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 _CLIENT = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY", "ollama"),
