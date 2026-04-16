@@ -1,3 +1,4 @@
+.deepeval*
 storage/**/*.faiss
 storage/**/*.json
 
