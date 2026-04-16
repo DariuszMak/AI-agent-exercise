@@ -94,4 +94,16 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
     -ContentType "application/json"
 
 $response
+
+#####
+
+$body = @{ query = "What is Ksef?" } | ConvertTo-Json
+
+# Call the Flask query endpoint
+$response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
+    -Method POST `
+    -Body $body `
+    -ContentType "application/json"
+
+$response
 ```
