@@ -32,7 +32,7 @@ def _cached_completion(prompt: str, model: str) -> str:
 def generate_answer(
     question: str,
     context_chunks: Iterable[str],
-    model: str = "llama3",
+    model: str = "phi3",
 ) -> str:
     context = "\n\n".join(context_chunks)
 
