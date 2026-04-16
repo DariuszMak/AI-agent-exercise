@@ -52,12 +52,11 @@ uv run pytest tests/ --cov=src -vv ;
 ##### LOCAL RUN:
 
 Start-Process uv -ArgumentList "run", "python", "src\main.py" ; 
-```
 
-### INVOKE API REQUESTS:
+##### INVOKE API REQUESTS:
 
-```commandline
 Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST ; 
+Start-Sleep -Seconds 20 ; 
 
 ##########
 
