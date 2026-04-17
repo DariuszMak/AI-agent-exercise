@@ -64,7 +64,8 @@ score must be 1 (relevant) or 0 (not relevant or off-topic)."""
 def score_context_relevancy(question: str, contexts: list[str]) -> dict:
     """Did the retriever return chunks useful for answering this question?"""
     context_block = "\n---\n".join(contexts)
-    prompt = f"""You are evaluating a RAG retriever. Decide if the retrieved context is useful for answering the question.
+    prompt = f"""You are evaluating a RAG retriever.
+    Decide if the retrieved context is useful for answering the question.
 
 QUESTION:
 {question}
