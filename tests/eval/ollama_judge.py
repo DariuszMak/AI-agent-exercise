@@ -6,11 +6,10 @@ import re
 from openai import OpenAI
 
 _client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
-_MODEL = "gemma:2b"  # match your ollama list
+_MODEL = "gemma:2b"
 
 
 def _ask_judge(prompt: str) -> dict:
-    """Call Ollama and extract the first JSON object from the response."""
     response = _client.chat.completions.create(
         model=_MODEL,
         messages=[{"role": "user", "content": prompt}],
@@ -27,7 +26,6 @@ def _ask_judge(prompt: str) -> dict:
 
 
 def score_faithfulness(answer: str, contexts: list[str]) -> dict:
-    """Is the answer grounded in the retrieved context (no hallucination)?"""
     context_block = "\n---\n".join(contexts)
     prompt = f"""You are evaluating a RAG system. Decide if the answer is fully supported by the context.
 
@@ -45,7 +43,6 @@ score must be 1 (faithful) or 0 (hallucination detected)."""
 
 
 def score_answer_relevancy(question: str, answer: str) -> dict:
-    """Does the answer actually address the question?"""
     prompt = f"""You are evaluating a RAG system. Decide if the answer is relevant to the question.
 
 QUESTION:
@@ -62,7 +59,6 @@ score must be 1 (relevant) or 0 (not relevant or off-topic)."""
 
 
 def score_context_relevancy(question: str, contexts: list[str]) -> dict:
-    """Did the retriever return chunks useful for answering this question?"""
     context_block = "\n---\n".join(contexts)
     prompt = f"""You are evaluating a RAG retriever.
     Decide if the retrieved context is useful for answering the question.
