@@ -46,9 +46,9 @@ $env:UV_ENV_FILE = ".env.example" ;
 .\scripts\format_and_lint.ps1 ; 
 
 uv run pytest tests/ --cov=src -vv -m "not slow" ; 
-uv run pytest tests/eval/ --cov=src -vv -m slow ; 
 
 # uv run deepeval test run tests/eval/test_rag_accuracy.py ; 
+# uv run pytest tests/eval/ --cov=src -vv -m slow ; 
 
 # uv run pytest tests/ -m slow --cov=src -vv ; 
 # uv run pytest tests/ -m "not slow" --cov=src -vv ; 
