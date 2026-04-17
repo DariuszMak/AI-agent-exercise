@@ -113,8 +113,8 @@ $response
 ```
 
 
-Check current model:
+Check installed models:
 
 ```commandline
-Invoke-RestMethod -Uri http://localhost:11434/api/tags ; 
+ollama list ; 
 ```
