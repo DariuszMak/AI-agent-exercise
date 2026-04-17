@@ -1,27 +1,18 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
-from deepeval import assert_test
-from deepeval.metrics import (
-    AnswerRelevancyMetric,
-    FaithfulnessMetric,
-)
-from deepeval.test_case import LLMTestCase
 
 from src.app import create_app
-from tests.eval.ollama_judge import OllamaJudge
+from tests.eval.ollama_judge import score_answer_relevancy, score_context_relevancy, score_faithfulness
 
-DOCUMENTS_PATH_STR = "storage/documents/EN"
-THRESHOLD = 0.5
-
-judge = OllamaJudge(model="llama3")  # swap model name if you use llama3.2 etc.
+DOCUMENTS_PATH = Path("storage/documents/EN")
 
 
 @pytest.fixture(scope="module")
 def rag_client():
-    from pathlib import Path
-
-    app = create_app(documents_path=Path(DOCUMENTS_PATH_STR), autoload=True)
+    app = create_app(documents_path=DOCUMENTS_PATH, autoload=True)
     app.config["TESTING"] = True
     client = app.test_client()
     r = client.post("/index")
@@ -37,39 +28,31 @@ def ask(client, question: str) -> tuple[str, list[str]]:
 
 
 TEST_CASES = [
-    {
-        "input": "What is KSeF?",
-        "expected_output": "KSeF is the National e-Invoice System in Poland.",
-    },
-    {
-        "input": "What is Camunda?",
-        "expected_output": "Camunda is a process automation platform.",
-    },
-    {
-        "input": "What is Devapo?",
-        "expected_output": "Devapo is a software company.",
-    },
+    "What is KSeF?",
+    "What is Camunda?",
+    "What is Devapo?",
 ]
 
 
-@pytest.mark.parametrize("case", TEST_CASES, ids=[c["input"] for c in TEST_CASES])
+@pytest.mark.parametrize("question", TEST_CASES)
 @pytest.mark.slow
-def test_rag_accuracy(rag_client, case: dict) -> None:
-    answer, contexts = ask(rag_client, case["input"])
+def test_faithfulness(rag_client, question: str) -> None:
+    answer, contexts = ask(rag_client, question)
+    result = score_faithfulness(answer, contexts)
+    assert result["score"] == 1, f"Faithfulness FAILED — {result['reason']}"
 
-    test_case = LLMTestCase(
-        input=case["input"],
-        actual_output=answer,
-        expected_output=case["expected_output"],
-        retrieval_context=contexts,
-    )
 
-    assert_test(
-        test_case,
-        metrics=[
-            AnswerRelevancyMetric(threshold=THRESHOLD, model=judge),
-            FaithfulnessMetric(threshold=THRESHOLD, model=judge),
-            # ContextualPrecisionMetric(threshold=THRESHOLD, model=judge),
-            # ContextualRecallMetric(threshold=THRESHOLD, model=judge),
-        ],
-    )
+@pytest.mark.parametrize("question", TEST_CASES)
+@pytest.mark.slow
+def test_answer_relevancy(rag_client, question: str) -> None:
+    answer, contexts = ask(rag_client, question)
+    result = score_answer_relevancy(question, answer)
+    assert result["score"] == 1, f"Answer relevancy FAILED — {result['reason']}"
+
+
+@pytest.mark.parametrize("question", TEST_CASES)
+@pytest.mark.slow
+def test_context_relevancy(rag_client, question: str) -> None:
+    answer, contexts = ask(rag_client, question)
+    result = score_context_relevancy(question, contexts)
+    assert result["score"] == 1, f"Context relevancy FAILED — {result['reason']}"
