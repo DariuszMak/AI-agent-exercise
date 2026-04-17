@@ -45,7 +45,7 @@ def test_faithfulness(rag_client, question: str) -> None:
 @pytest.mark.parametrize("question", TEST_CASES)
 @pytest.mark.slow
 def test_answer_relevancy(rag_client, question: str) -> None:
-    answer, contexts = ask(rag_client, question)
+    answer, _contexts = ask(rag_client, question)
     result = score_answer_relevancy(question, answer)
     assert result["score"] == 1, f"Answer relevancy FAILED — {result['reason']}"
 
@@ -53,6 +53,6 @@ def test_answer_relevancy(rag_client, question: str) -> None:
 @pytest.mark.parametrize("question", TEST_CASES)
 @pytest.mark.slow
 def test_context_relevancy(rag_client, question: str) -> None:
-    answer, contexts = ask(rag_client, question)
+    _answer, contexts = ask(rag_client, question)
     result = score_context_relevancy(question, contexts)
     assert result["score"] == 1, f"Context relevancy FAILED — {result['reason']}"

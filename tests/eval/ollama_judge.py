@@ -6,7 +6,7 @@ import re
 from openai import OpenAI
 
 _client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
-_MODEL = "llama3"  # match your ollama list
+_MODEL = "gemma:2b"  # match your ollama list
 
 
 def _ask_judge(prompt: str) -> dict:
