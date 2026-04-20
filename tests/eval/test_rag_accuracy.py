@@ -56,6 +56,7 @@ COMPLETENESS_MIN = 0.5
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture(scope="module")
 def rag_client() -> FlaskClient:
     app = create_app(documents_path=DOCUMENTS_PATH, autoload=True)
@@ -85,6 +86,7 @@ GROUND_TRUTHS = {entry["question"]: entry["ground_truth"] for entry in GOLDEN_DA
 # ollama_judge tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("question", QUESTIONS)
 @pytest.mark.slow
 def test_faithfulness(rag_client: FlaskClient, question: str) -> None:
@@ -92,8 +94,7 @@ def test_faithfulness(rag_client: FlaskClient, question: str) -> None:
     answer, contexts = ask(rag_client, question)
     result = score_faithfulness(answer, contexts)
     assert result["score"] >= FAITHFULNESS_MIN, (
-        f"Faithfulness too low ({result['score']:.2f}) — {result['reason']}\n"
-        f"Raw judge output: {result['raw'][:300]}"
+        f"Faithfulness too low ({result['score']:.2f}) — {result['reason']}\nRaw judge output: {result['raw'][:300]}"
     )
 
 
@@ -129,14 +130,14 @@ def test_completeness(rag_client: FlaskClient, question: str) -> None:
     ground_truth = GROUND_TRUTHS[question]
     result = score_completeness(question, answer, ground_truth)
     assert result["score"] >= COMPLETENESS_MIN, (
-        f"Completeness too low ({result['score']:.2f}) — {result['reason']}\n"
-        f"Raw judge output: {result['raw'][:300]}"
+        f"Completeness too low ({result['score']:.2f}) — {result['reason']}\nRaw judge output: {result['raw'][:300]}"
     )
 
 
 # ---------------------------------------------------------------------------
 # RAGAS batch evaluation
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.slow
 @pytest.mark.ragas

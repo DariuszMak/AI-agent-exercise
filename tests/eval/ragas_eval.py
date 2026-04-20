@@ -78,10 +78,7 @@ except ImportError:
 
 def _require_ragas() -> None:
     if not _RAGAS_AVAILABLE:
-        msg = (
-            "ragas is not installed. "
-            "Run: pip install ragas datasets langchain-openai"
-        )
+        msg = "ragas is not installed. Run: pip install ragas datasets langchain-openai"
         raise ImportError(msg)
 
 
@@ -106,6 +103,7 @@ def _build_embeddings() -> Any:
 # ---------------------------------------------------------------------------
 # Public helpers
 # ---------------------------------------------------------------------------
+
 
 def ask(client: FlaskClient, question: str) -> tuple[str, list[str]]:
     """Call /ask and return (answer, context_chunks)."""
@@ -218,8 +216,7 @@ def run_ragas_eval(
     if partial_nan:
         nan_counts = {col: int(df[col].isna().sum()) for col in partial_nan}
         logger.warning(
-            "RAGAS produced NaN for some rows on %s. "
-            "NaN rows are excluded from aggregate score calculations.",
+            "RAGAS produced NaN for some rows on %s. NaN rows are excluded from aggregate score calculations.",
             nan_counts,
         )
 
