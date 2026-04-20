@@ -9,6 +9,7 @@ dependencies = [
     "flask>=3.1.2",
     "numpy>=2.3.5",
     "openai>=2.14.0",
+    "ragas>=0.4.3",
     "sentence-transformers>=5.2.0",
     "tiktoken>=0.12.0",
 ]
