@@ -12,8 +12,7 @@ Run with:
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -22,10 +21,13 @@ import pytest
 from src.app import create_app
 from tests.eval.retrieval_metrics import hit_rate, mrr, ndcg
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
+
 
 def _fake_embed(text: str) -> np.ndarray:
     """Deterministic fake embedding — same text always gives same vector."""
@@ -71,6 +73,7 @@ def retrieval_client(tmp_path_factory: pytest.TempPathFactory):  # type: ignore[
         mock_st.return_value = instance
 
         import src.rag.embeddings as emb
+
         emb._model = None
 
         app = create_app(documents_path=docs)
@@ -101,6 +104,7 @@ GOLDEN_PAIRS: list[tuple[str, str]] = [
 # ---------------------------------------------------------------------------
 # Metric tests
 # ---------------------------------------------------------------------------
+
 
 class TestHitRate:
     def test_hit_rate_at_1(self, retrieval_client: Any) -> None:

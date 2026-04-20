@@ -52,10 +52,7 @@ def hit_rate(
     if not qa_pairs:
         return 0.0
 
-    hits = sum(
-        any(r["id"] == expected for r in _get_results(client, q, k))
-        for q, expected in qa_pairs
-    )
+    hits = sum(any(r["id"] == expected for r in _get_results(client, q, k)) for q, expected in qa_pairs)
     return hits / len(qa_pairs)
 
 

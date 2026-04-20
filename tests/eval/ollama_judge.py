@@ -39,14 +39,15 @@ _client = OpenAI(api_key=_API_KEY, base_url=_BASE_URL)
 
 
 class JudgeResult(TypedDict):
-    score: float       # 0.0 – 1.0
+    score: float  # 0.0 – 1.0
     reason: str
-    raw: str           # full model output, useful for debugging
+    raw: str  # full model output, useful for debugging
 
 
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
 
 def _ask_judge(prompt: str) -> JudgeResult:
     response = _client.chat.completions.create(
@@ -74,13 +75,14 @@ def _ask_judge(prompt: str) -> JudgeResult:
             "reason": str(parsed.get("reason", "")),
             "raw": raw,
         }
-    except (json.JSONDecodeError, ValueError):
+    except json.JSONDecodeError, ValueError:
         return {"score": 0.0, "reason": f"invalid JSON: {raw[:200]}", "raw": raw}
 
 
 # ---------------------------------------------------------------------------
 # Public scorers
 # ---------------------------------------------------------------------------
+
 
 def score_faithfulness(answer: str, contexts: list[str]) -> JudgeResult:
     """

@@ -49,6 +49,7 @@ COMPLETENESS_MIN = 0.5
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture(scope="module")
 def rag_client() -> FlaskClient:
     app = create_app(documents_path=DOCUMENTS_PATH, autoload=True)
@@ -78,20 +79,20 @@ GROUND_TRUTHS = {entry["question"]: entry["ground_truth"] for entry in GOLDEN_DA
 # Faithfulness tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("question", QUESTIONS)
 @pytest.mark.slow
 def test_faithfulness(rag_client: FlaskClient, question: str) -> None:
     """Every claim in the answer must be grounded in the retrieved context."""
     answer, contexts = ask(rag_client, question)
     result = score_faithfulness(answer, contexts)
-    assert result["score"] >= FAITHFULNESS_MIN, (
-        f"Faithfulness too low ({result['score']:.2f}) — {result['reason']}"
-    )
+    assert result["score"] >= FAITHFULNESS_MIN, f"Faithfulness too low ({result['score']:.2f}) — {result['reason']}"
 
 
 # ---------------------------------------------------------------------------
 # Answer relevancy tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("question", QUESTIONS)
 @pytest.mark.slow
@@ -108,6 +109,7 @@ def test_answer_relevancy(rag_client: FlaskClient, question: str) -> None:
 # Context relevancy tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("question", QUESTIONS)
 @pytest.mark.slow
 def test_context_relevancy(rag_client: FlaskClient, question: str) -> None:
@@ -123,6 +125,7 @@ def test_context_relevancy(rag_client: FlaskClient, question: str) -> None:
 # Completeness tests (requires ground truth)
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("question", QUESTIONS)
 @pytest.mark.slow
 def test_completeness(rag_client: FlaskClient, question: str) -> None:
@@ -130,14 +133,13 @@ def test_completeness(rag_client: FlaskClient, question: str) -> None:
     answer, _contexts = ask(rag_client, question)
     ground_truth = GROUND_TRUTHS[question]
     result = score_completeness(question, answer, ground_truth)
-    assert result["score"] >= COMPLETENESS_MIN, (
-        f"Completeness too low ({result['score']:.2f}) — {result['reason']}"
-    )
+    assert result["score"] >= COMPLETENESS_MIN, f"Completeness too low ({result['score']:.2f}) — {result['reason']}"
 
 
 # ---------------------------------------------------------------------------
 # RAGAS batch evaluation (optional — requires ragas + langchain-openai)
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.slow
 @pytest.mark.ragas
@@ -164,7 +166,6 @@ def test_ragas_aggregate_scores(rag_client: FlaskClient) -> None:
     )
 
     df = results.to_pandas()
-    print("\nRAGAS results:\n", df.to_string())
 
     assert df["faithfulness"].mean() >= FAITHFULNESS_MIN, (
         f"Mean RAGAS faithfulness {df['faithfulness'].mean():.3f} below threshold"

@@ -55,10 +55,7 @@ _RAGAS_API_KEY = os.environ.get("OPENAI_API_KEY", "ollama")
 
 def _require_ragas() -> None:
     if not _RAGAS_AVAILABLE:
-        msg = (
-            "ragas is not installed. "
-            "Run: pip install ragas datasets langchain-openai"
-        )
+        msg = "ragas is not installed. Run: pip install ragas datasets langchain-openai"
         raise ImportError(msg)
 
 
