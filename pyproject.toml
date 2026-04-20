@@ -211,5 +211,8 @@ filterwarnings = [
   "ignore:.*swigvarlink.*:DeprecationWarning",
 ]
 markers = [
-  "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "slow: tests that call a local LLM (Ollama) — skip in fast CI",
+    "ragas: tests that require the ragas + langchain-openai packages"
 ]
+addopts = "-v"
+testpaths = ["tests"]
