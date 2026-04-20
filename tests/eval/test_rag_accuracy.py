@@ -2,17 +2,24 @@
 RAG accuracy tests — LLM-dependent, marked @pytest.mark.slow.
 
 Two evaluation paths are available:
-1. ollama_judge  — uses your local Ollama model, binary/float scores
+1. ollama_judge  — uses your local Ollama model, float scores
 2. ragas         — uses RAGAS library for continuous 0-1 metrics (optional)
 
-Run only the fast tests:
+Run only fast tests (no LLM):
     pytest tests/eval/test_rag_accuracy.py -v -m "not slow"
 
-Run all including LLM-dependent tests:
+Run LLM-dependent tests:
     pytest tests/eval/test_rag_accuracy.py -v -m slow
 
-Run only RAGAS tests:
+Run only RAGAS test:
     pytest tests/eval/test_rag_accuracy.py -v -m ragas
+
+Skip RAGAS (e.g. gemma:2b environment):
+    pytest tests/eval/test_rag_accuracy.py -v -m "slow and not ragas"
+
+Use a capable judge model for RAGAS:
+    RAGAS_MODEL=llama3.1:8b pytest -m ragas
+    RAGAS_MODEL=gpt-4o-mini OPENAI_API_KEY=sk-... OPENAI_BASE_URL=https://api.openai.com/v1 pytest -m ragas
 """
 
 from __future__ import annotations
@@ -49,7 +56,6 @@ COMPLETENESS_MIN = 0.5
 # Fixtures
 # ---------------------------------------------------------------------------
 
-
 @pytest.fixture(scope="module")
 def rag_client() -> FlaskClient:
     app = create_app(documents_path=DOCUMENTS_PATH, autoload=True)
@@ -76,9 +82,8 @@ GROUND_TRUTHS = {entry["question"]: entry["ground_truth"] for entry in GOLDEN_DA
 
 
 # ---------------------------------------------------------------------------
-# Faithfulness tests
+# ollama_judge tests
 # ---------------------------------------------------------------------------
-
 
 @pytest.mark.parametrize("question", QUESTIONS)
 @pytest.mark.slow
@@ -86,12 +91,10 @@ def test_faithfulness(rag_client: FlaskClient, question: str) -> None:
     """Every claim in the answer must be grounded in the retrieved context."""
     answer, contexts = ask(rag_client, question)
     result = score_faithfulness(answer, contexts)
-    assert result["score"] >= FAITHFULNESS_MIN, f"Faithfulness too low ({result['score']:.2f}) — {result['reason']}"
-
-
-# ---------------------------------------------------------------------------
-# Answer relevancy tests
-# ---------------------------------------------------------------------------
+    assert result["score"] >= FAITHFULNESS_MIN, (
+        f"Faithfulness too low ({result['score']:.2f}) — {result['reason']}\n"
+        f"Raw judge output: {result['raw'][:300]}"
+    )
 
 
 @pytest.mark.parametrize("question", QUESTIONS)
@@ -101,13 +104,9 @@ def test_answer_relevancy(rag_client: FlaskClient, question: str) -> None:
     answer, _contexts = ask(rag_client, question)
     result = score_answer_relevancy(question, answer)
     assert result["score"] >= ANSWER_RELEVANCY_MIN, (
-        f"Answer relevancy too low ({result['score']:.2f}) — {result['reason']}"
+        f"Answer relevancy too low ({result['score']:.2f}) — {result['reason']}\n"
+        f"Raw judge output: {result['raw'][:300]}"
     )
-
-
-# ---------------------------------------------------------------------------
-# Context relevancy tests
-# ---------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize("question", QUESTIONS)
@@ -117,13 +116,9 @@ def test_context_relevancy(rag_client: FlaskClient, question: str) -> None:
     _answer, contexts = ask(rag_client, question)
     result = score_context_relevancy(question, contexts)
     assert result["score"] >= CONTEXT_RELEVANCY_MIN, (
-        f"Context relevancy too low ({result['score']:.2f}) — {result['reason']}"
+        f"Context relevancy too low ({result['score']:.2f}) — {result['reason']}\n"
+        f"Raw judge output: {result['raw'][:300]}"
     )
-
-
-# ---------------------------------------------------------------------------
-# Completeness tests (requires ground truth)
-# ---------------------------------------------------------------------------
 
 
 @pytest.mark.parametrize("question", QUESTIONS)
@@ -133,13 +128,15 @@ def test_completeness(rag_client: FlaskClient, question: str) -> None:
     answer, _contexts = ask(rag_client, question)
     ground_truth = GROUND_TRUTHS[question]
     result = score_completeness(question, answer, ground_truth)
-    assert result["score"] >= COMPLETENESS_MIN, f"Completeness too low ({result['score']:.2f}) — {result['reason']}"
+    assert result["score"] >= COMPLETENESS_MIN, (
+        f"Completeness too low ({result['score']:.2f}) — {result['reason']}\n"
+        f"Raw judge output: {result['raw'][:300]}"
+    )
 
 
 # ---------------------------------------------------------------------------
-# RAGAS batch evaluation (optional — requires ragas + langchain-openai)
+# RAGAS batch evaluation
 # ---------------------------------------------------------------------------
-
 
 @pytest.mark.slow
 @pytest.mark.ragas
@@ -147,29 +144,49 @@ def test_ragas_aggregate_scores(rag_client: FlaskClient) -> None:
     """
     Run RAGAS over the full golden dataset and assert aggregate thresholds.
 
-    Skip this test if ragas is not installed:
-        pytest -m "not ragas"
+    This test requires a capable judge model (>=7B parameters or an API model).
+    It will be skipped automatically if:
+      - ragas is not installed
+      - the judge model produces all-NaN scores (model too small)
+
+    To run with a capable model:
+        RAGAS_MODEL=llama3.1:8b pytest -m ragas
+        RAGAS_MODEL=gpt-4o-mini OPENAI_API_KEY=sk-... OPENAI_BASE_URL=https://api.openai.com/v1 pytest -m ragas
+
+    To skip entirely:
+        pytest -m "slow and not ragas"
     """
     try:
         from tests.eval.ragas_eval import run_ragas_eval
     except ImportError:
-        pytest.skip("ragas not installed")
+        pytest.skip("ragas not installed — run: pip install ragas datasets langchain-openai")
 
     questions = QUESTIONS
     ground_truths = [GROUND_TRUTHS[q] for q in questions]
 
-    results = run_ragas_eval(
-        rag_client,
-        questions,
-        ground_truths=ground_truths,
-        include_recall=True,
-    )
+    try:
+        results = run_ragas_eval(
+            rag_client,
+            questions,
+            ground_truths=ground_truths,
+            include_recall=True,
+        )
+    except ValueError as exc:
+        # All-NaN scores — model is too small to be a RAGAS judge
+        pytest.skip(str(exc))
 
     df = results.to_pandas()
+    # print("\nRAGAS results:\n", df.to_string())
 
-    assert df["faithfulness"].mean() >= FAITHFULNESS_MIN, (
-        f"Mean RAGAS faithfulness {df['faithfulness'].mean():.3f} below threshold"
+    # Use nanmean so that partial NaN rows don't fail the whole suite
+    import numpy as np
+
+    faith_mean = float(np.nanmean(df["faithfulness"]))
+    relevancy_mean = float(np.nanmean(df["answer_relevancy"]))
+
+    assert faith_mean >= FAITHFULNESS_MIN, (
+        f"Mean RAGAS faithfulness {faith_mean:.3f} below threshold {FAITHFULNESS_MIN}"
     )
-    assert df["answer_relevancy"].mean() >= ANSWER_RELEVANCY_MIN, (
-        f"Mean RAGAS answer_relevancy {df['answer_relevancy'].mean():.3f} below threshold"
+    assert relevancy_mean >= ANSWER_RELEVANCY_MIN, (
+        f"Mean RAGAS answer_relevancy {relevancy_mean:.3f} below threshold {ANSWER_RELEVANCY_MIN}"
     )
