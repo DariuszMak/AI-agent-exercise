@@ -4,6 +4,13 @@
 
 - [UV](https://github.com/astral-sh/uv) package manager
 
+
+### Project structure diagram
+
+<p align="center">
+  <img src="images/structure_module.svg" alt="Project Structure Diagram" width="600">
+</p>
+
 ## Local development (Windows PowerShell):
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
