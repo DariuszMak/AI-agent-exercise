@@ -4,11 +4,18 @@
 
 - [UV](https://github.com/astral-sh/uv) package manager
 
+### Project structure diagrams
 
-### Project structure diagram
+##### Modular perspective
 
 <p align="center">
-  <img src="images/structure_module.svg" alt="Project Structure Diagram" width="600">
+  <img src="images/structure_module.svg" alt="Modular perspective" width="600">
+</p>
+
+##### Library dependencies perspective
+
+<p align="center">
+  <img src="images/structure_module_clustered.svg" alt="Library dependencies perspective" width="600">
 </p>
 
 ## Local development (Windows PowerShell):
