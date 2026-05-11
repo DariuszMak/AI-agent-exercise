@@ -155,3 +155,6 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+
+# Ruff
+ruff-report.json
