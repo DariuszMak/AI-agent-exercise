@@ -16,6 +16,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "deepeval>=3.9.7",
+    "import-linter>=2.11",
     "mypy>=1.16.0",
     "pip-audit>=2.9.0",
     "pydeps>=3.0.6",
