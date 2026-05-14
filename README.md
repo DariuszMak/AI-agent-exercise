@@ -28,7 +28,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 deactivate ; 
 clear ; 
 
-$ports = 5433, 9000
+$ports = 5433
 
 foreach ($port in $ports) {
     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
@@ -140,7 +140,7 @@ Login in SonarQube as `admin` with password `Admin1@Admin1@`.
 deactivate ; 
 clear ; 
 
-$ports = 5433, 9000
+$ports = 5433
 
 foreach ($port in $ports) {
     $conns = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
