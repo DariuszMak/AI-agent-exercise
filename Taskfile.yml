@@ -1,0 +1,68 @@
+version: "3"
+
+env:
+  UV_ENV_FILE: .dev.env
+
+tasks:
+  cleanup:
+    desc: Full project cleanup (docker, git, ports, caches)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/cleanup.ps1
+
+  dev-env:
+    desc: Setup uv environment (Python, sync, lock)
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/dev_uv_environment.ps1
+      - powershell -ExecutionPolicy Bypass -File .venv/Scripts/Activate.ps1
+
+  local-static-tests:
+    desc: Static analysis + unit tests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/static_analysis_and_tests.ps1
+
+  kibana-elastic:
+    desc: Start Elastic + Kibana stack
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/kibana_elastic.ps1
+
+  sonarqube:
+    desc: Run SonarQube analysis pipeline
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/sonarqube.ps1
+
+  generate-diagrams:
+    desc: Generate project diagrams
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/generate_diagrams.ps1
+
+  local-dev-windows-run:
+    desc: Local dev Windows run
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/run_windows_dev_application.ps1
+
+  local-dev-windows-api-tests:
+    desc: Local dev Windows API tests
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
+
+  full-dev-windows:
+    desc: Fast native Windows development flow
+    deps:
+      - cleanup
+    cmds:
+      - task: dev-env
+      - task: local-static-tests
+      - task: kibana-elastic
+      - task: local-dev-windows-run
+      - task: local-dev-windows-api-tests
+
+  full-static-analyzis:
+    desc: Full static analysis + SonarQube + diagrams
+    deps:
+      - cleanup
+    cmds:
+      - task: dev-env
+      - task: local-static-tests
+      - task: sonarqube
+      - task: generate-diagrams
