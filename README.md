@@ -68,7 +68,7 @@ uv lock ;
 ##### STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-$env:UV_ENV_FILE = ".env.example" ; 
+$env:UV_ENV_FILE = ".dev.env" ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
@@ -188,7 +188,7 @@ uv lock ;
 ##### STATIC ANALYSIS & TESTS
 
 .venv\Scripts\Activate.ps1 ; 
-$env:UV_ENV_FILE = ".env.example" ; 
+$env:UV_ENV_FILE = ".dev.env" ; 
 
 .\scripts\format_and_lint.ps1 ; 
 
