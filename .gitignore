@@ -136,3 +136,9 @@ GitHub.sublime-settings
 
 # Ruff
 ruff-report.json
+
+FAISS
+*.faiss
+
+#RAG documents
+storage/documents/*.json

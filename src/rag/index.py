@@ -5,7 +5,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-import faiss  # type: ignore[import-untyped]
+import faiss
 import numpy as np
 
 from src.rag.embeddings import embed
