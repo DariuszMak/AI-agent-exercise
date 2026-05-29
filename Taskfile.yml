@@ -43,8 +43,8 @@ tasks:
   local-dev-windows-api-tests:
     desc: Local dev Windows API tests
     cmds:
-      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_windows_api.ps1
-      - powershell -ExecutionPolicy Bypass -File tasks/test_windows_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/wait_for_api.ps1
+      - powershell -ExecutionPolicy Bypass -File tasks/test_api.ps1
 
   full-dev-windows:
     desc: Fast native Windows development flow
