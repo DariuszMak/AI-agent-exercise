@@ -1,9 +1,5 @@
 # Python AI Agent Excercise
 
-## Requirements
-
-- [UV](https://github.com/astral-sh/uv) package manager
-
 ### Project structure diagrams
 
 ##### Modular perspective
@@ -18,20 +14,25 @@
   <img src="images/structure_module_clustered.svg" alt="Library dependencies perspective" width="600">
 </p>
 
-## Local development (Windows PowerShell):
+## Requirements
+
+- [UV](https://github.com/astral-sh/uv) package manager
+- [Task](https://taskfile.dev/docs/installation) runner
+
+## Local development (Windows PowerShell)
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-## Fast native Windows development
+### Fast Windows dev
 
 ```commandline
+task full-dev-windows ; 
 ```
 
-## Full static analysis
-
-Login in SonarQube as `admin` with password `Admin1@Admin1@`.
+### Full analysis
 
 ```commandline
+task full-static-analyzis ; 
 ```
 
 Check installed models:
