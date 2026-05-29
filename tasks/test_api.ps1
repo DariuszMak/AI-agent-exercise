@@ -1,6 +1,3 @@
-Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST
-
-
 $body = @{ query = "What is KSeF?" } | ConvertTo-Json
 
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
