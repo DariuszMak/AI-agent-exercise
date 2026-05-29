@@ -18,6 +18,7 @@
 
 - [UV](https://github.com/astral-sh/uv) package manager
 - [Task](https://taskfile.dev/docs/installation) runner
+- [Ollama](https://ollama.com/)
 
 ## Local development (Windows PowerShell)
 
