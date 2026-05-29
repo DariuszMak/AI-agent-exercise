@@ -1,11 +1,8 @@
-Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST ; 
+Invoke-RestMethod -Uri http://127.0.0.1:5000/index -Method POST
 
-##########
 
-# Prepare JSON body
 $body = @{ query = "What is KSeF?" } | ConvertTo-Json
 
-# Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
     -Method POST `
     -Body $body `
@@ -13,11 +10,9 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
 
 $response
 
-##########
 
 $body = @{ query = "What is Camunda?" } | ConvertTo-Json
 
-# Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
     -Method POST `
     -Body $body `
@@ -25,11 +20,9 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
 
 $response
 
-#####
 
 $body = @{ query = "What is Devapo?" } | ConvertTo-Json
 
-# Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
     -Method POST `
     -Body $body `
@@ -37,11 +30,9 @@ $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
 
 $response
 
-#####
 
 $body = @{ query = "What is Ksef?" } | ConvertTo-Json
 
-# Call the Flask query endpoint
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/ask `
     -Method POST `
     -Body $body `
