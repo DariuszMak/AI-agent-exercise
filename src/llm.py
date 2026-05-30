@@ -10,7 +10,7 @@ from urllib.error import URLError
 logger = logging.getLogger(__name__)
 
 OLLAMA_BASE_URL = "http://localhost:11434"
-DEFAULT_MODEL = "gemma3:4b"
+DEFAULT_MODEL = "gemma:2b"
 
 
 @dataclass(frozen=True)
