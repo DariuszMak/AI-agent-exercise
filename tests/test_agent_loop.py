@@ -37,7 +37,7 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
 @pytest.fixture()
 def mock_llm() -> MagicMock:
     llm = MagicMock()
-    llm.complete.return_value = LLMResponse(content="KSeF to Krajowy System e-Faktur.", model="gemma3:4b", done=True)
+    llm.complete.return_value = LLMResponse(content="KSeF to Krajowy System e-Faktur.", model="gemma:2b", done=True)
     llm.complete_json.return_value = {
         "needs_external_tool": False,
         "tool_name": None,

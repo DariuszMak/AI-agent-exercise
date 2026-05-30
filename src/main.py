@@ -29,7 +29,7 @@ def build_agent():
     store = IndexStore.load(INDEX_PATH, DOCSTORE_PATH)
     retriever = AgenticRetriever.from_index_store(store)
 
-    llm = OllamaAdapter(model="gemma3:4b")
+    llm = OllamaAdapter(model="gemma:2b")
     mcp = MCPClient(server_url=MCP_SERVER_URL)
     evaluator = RAGEvaluator(relevance_threshold=0.45)
     rewriter = RAGRewriter(llm=llm)
