@@ -50,10 +50,7 @@ class ToolRegistry:
 
     def load_from_server(self, mcp_client: Any) -> None:
         raw_tools: list[dict[str, Any]] = mcp_client.list_tools()
-        self._tools = {
-            t["name"]: ToolDefinition.from_mcp_dict(t)
-            for t in raw_tools
-        }
+        self._tools = {t["name"]: ToolDefinition.from_mcp_dict(t) for t in raw_tools}
 
     def register(self, tool: ToolDefinition) -> None:
         self._tools[tool.name] = tool

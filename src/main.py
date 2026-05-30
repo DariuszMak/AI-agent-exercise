@@ -55,18 +55,8 @@ def main() -> None:
     agent = build_agent()
     result = agent.run(query)
 
-    print("\n" + "═" * 60)
-    print(f"ODPOWIEDŹ:\n{result.answer}")
-    print("═" * 60)
-    print(f"Iteracje: {result.total_iterations}  |  Ostatni score: {result.final_score:.3f}")
-    print("\nKroki:")
     for step in result.steps:
-        tool_info = f" | MCP: {step.tool_called}" if step.tool_called else ""
-        status = "✓" if step.rag_passed else "✗"
-        print(
-            f"  [{step.iteration}] {status} score={step.rag_score:.3f}"
-            f"  query={step.query_used[:50]!r}{tool_info}"
-        )
+        pass
 
 
 if __name__ == "__main__":

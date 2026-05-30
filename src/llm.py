@@ -68,8 +68,7 @@ class OllamaAdapter:
         Zwraca sparsowany obiekt Python lub rzuca ValueError.
         """
         json_prompt = (
-            f"{prompt}\n\nOdpowiedz WYŁĄCZNIE poprawnym JSON-em, "
-            "bez żadnego dodatkowego tekstu ani bloków kodu."
+            f"{prompt}\n\nOdpowiedz WYŁĄCZNIE poprawnym JSON-em, bez żadnego dodatkowego tekstu ani bloków kodu."
         )
         response = self.complete(json_prompt, temperature=0.0)
         raw = response.content.strip().removeprefix("```json").removesuffix("```").strip()

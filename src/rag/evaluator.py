@@ -70,10 +70,7 @@ class RAGEvaluator:
             return EvaluationResult(
                 score=best_score,
                 passed=False,
-                reason=(
-                    f"Najwyższy wynik podobieństwa ({best_score:.3f}) "
-                    f"poniżej progu ({self._threshold:.3f})"
-                ),
+                reason=(f"Najwyższy wynik podobieństwa ({best_score:.3f}) poniżej progu ({self._threshold:.3f})"),
                 best_chunk=best_text,
             )
 
