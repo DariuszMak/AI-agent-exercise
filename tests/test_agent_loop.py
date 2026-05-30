@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pytest
@@ -10,7 +10,7 @@ from src.agent.loop import AgentLoop, AgentResult
 from src.llm import LLMResponse
 from src.mcp_client.client import MCPClient, MCPToolResult
 from src.rag.evaluator import RAGEvaluator
-from src.rag.retriever import AgenticRetriever
+from src.rag.agentic_retriever import AgenticRetriever
 
 
 def _fake_embed(text: str) -> np.ndarray:
@@ -37,7 +37,9 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
 @pytest.fixture()
 def mock_llm() -> MagicMock:
     llm = MagicMock()
-    llm.complete.return_value = LLMResponse(content="KSeF to Krajowy System e-Faktur.", model="gemma3:4b", done=True)
+    llm.complete.return_value = LLMResponse(
+        content="KSeF to Krajowy System e-Faktur.", model="gemma3:4b", done=True
+    )
     llm.complete_json.return_value = {
         "needs_external_tool": False,
         "tool_name": None,
@@ -60,7 +62,9 @@ def mock_mcp() -> MagicMock:
     mcp.list_tools.return_value = [
         {"name": "log_query", "description": "Loguje zapytanie"},
     ]
-    mcp.call_tool.return_value = MCPToolResult(tool_name="log_query", content="OK", is_error=False)
+    mcp.call_tool.return_value = MCPToolResult(
+        tool_name="log_query", content="OK", is_error=False
+    )
     return mcp
 
 
@@ -93,13 +97,9 @@ def test_agent_retries_on_low_score(
 ) -> None:
     low_score_docs = [
         {
-            "id": "x.txt",
-            "chunk_id": "0",
-            "text": "Nie ma tu żadnych informacji.",
-            "score": 0.1,
-            "token_count": 5,
-            "char_start": 0,
-            "char_end": 29,
+            "id": "x.txt", "chunk_id": "0",
+            "text": "Nie ma tu żadnych informacji.", "score": 0.1,
+            "token_count": 5, "char_start": 0, "char_end": 29,
         }
     ]
     retriever = MagicMock(spec=AgenticRetriever)
@@ -148,7 +148,10 @@ def test_agent_calls_mcp_tool_when_llm_requests(
 
     result = agent.run("Co to jest KSeF?")
 
-    fetch_calls = [call for call in mock_mcp.call_tool.call_args_list if call.args[0] == "fetch_external_context"]
+    fetch_calls = [
+        call for call in mock_mcp.call_tool.call_args_list
+        if call.args[0] == "fetch_external_context"
+    ]
     assert len(fetch_calls) == 1
     assert result.steps[0].tool_called == "fetch_external_context"
 
