@@ -6,12 +6,6 @@ from typing import Any
 
 @dataclass(frozen=True)
 class ToolDefinition:
-    """
-    Lokalna reprezentacja narzędzia MCP.
-    Pobierana z serwera przez MCPClient.list_tools() i cachowana tutaj,
-    żeby agent nie odpytywał serwera przy każdej iteracji.
-    """
-
     name: str
     description: str
     input_schema: dict[str, Any]
@@ -29,22 +23,6 @@ class ToolDefinition:
 
 
 class ToolRegistry:
-    """
-    Rejestr narzędzi MCP dostępnych dla agenta.
-
-    Odpowiedzialność:
-    - cache listy narzędzi pobranej z serwera MCP
-    - walidacja czy narzędzie istnieje przed wywołaniem
-    - formatowanie listy narzędzi do promptu fazy THINK
-
-    Użycie:
-        registry = ToolRegistry()
-        registry.load_from_server(mcp_client)
-
-        if registry.has("log_query"):
-            args = registry.get("log_query").input_schema
-    """
-
     def __init__(self) -> None:
         self._tools: dict[str, ToolDefinition] = {}
 

@@ -10,13 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class AgenticRetriever:
-    """
-    Cienka warstwa adaptera wokół istniejącego kodu FAISS z src/rag/retriever.py.
-
-    Przechowuje referencję do indeksu i dokumentów — agent nie musi
-    wiedzieć nic o FAISS, operuje tylko na słownikach Pythona.
-    """
-
     def __init__(
         self,
         index: faiss.Index,

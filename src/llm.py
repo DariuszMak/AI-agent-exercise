@@ -21,12 +21,6 @@ class LLMResponse:
 
 
 class OllamaAdapter:
-    """
-    Pojedynczy punkt integracji z Ollama.
-    Używa wyłącznie stdlib — zero zewnętrznych zależności w tej warstwie.
-    Podmień tę klasę na OpenAIAdapter i reszta kodu nie wymaga zmian.
-    """
-
     def __init__(
         self,
         base_url: str = OLLAMA_BASE_URL,
@@ -63,10 +57,6 @@ class OllamaAdapter:
         )
 
     def complete_json(self, prompt: str) -> Any:
-        """
-        Prosi LLM o odpowiedź w formacie JSON.
-        Zwraca sparsowany obiekt Python lub rzuca ValueError.
-        """
         json_prompt = (
             f"{prompt}\n\nOdpowiedz WYŁĄCZNIE poprawnym JSON-em, bez żadnego dodatkowego tekstu ani bloków kodu."
         )

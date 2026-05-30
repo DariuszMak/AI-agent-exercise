@@ -19,20 +19,6 @@ class EvaluationResult:
 
 
 class RAGEvaluator:
-    """
-    Ocenia jakość wyników wyszukiwania bez angażowania LLM-a.
-
-    Używa heurystyk opartych na:
-    - wynikach podobieństwa kosinusowego z FAISS (pole 'score')
-    - liczbie zwróconych dokumentów
-    - długości najlepszego fragmentu
-
-    To celowo prosta implementacja. Możesz ją rozszerzyć o:
-    - wywołanie LLM-a jako sędzia (LLM-as-a-judge)
-    - cross-encoder reranking
-    - sprawdzenie pokrycia słów kluczowych z pytania
-    """
-
     def __init__(
         self,
         relevance_threshold: float = DEFAULT_RELEVANCE_THRESHOLD,

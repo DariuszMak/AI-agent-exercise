@@ -27,16 +27,6 @@ Wygeneruj JEDNO nowe, ulepszone zapytanie do wyszukiwarki.
 
 
 class RAGRewriter:
-    """
-    Przepisuje zapytanie do RAG gdy poprzednie wyszukiwanie dało słabe wyniki.
-
-    Strategia:
-    1. Próbuje LLM-a (semantyczne przepisanie)
-    2. Fallback: proste heurystyki bez LLM-a
-
-    Dzięki temu agent nie blokuje się gdy Ollama jest niedostępna.
-    """
-
     def __init__(self, llm: OllamaAdapter | None = None) -> None:
         self._llm = llm
 

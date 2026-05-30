@@ -17,10 +17,6 @@ MCP_SERVER_URL = "http://localhost:8765"
 
 
 def build_agent():
-    """
-    Składa wszystkie warstwy w jeden gotowy agent.
-    Zwraca AgentLoop z podpiętymi zależnościami.
-    """
     from src.agent.loop import AgentLoop
     from src.llm import OllamaAdapter
     from src.mcp_client.client import MCPClient
