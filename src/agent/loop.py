@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -103,14 +104,16 @@ class AgentLoop:
             rag_results = self._act_rag(current_query)
             eval_result = self._evaluator.evaluate(current_query, rag_results)
 
-            steps.append(AgentStep(
-                iteration=iteration,
-                query_used=current_query,
-                rag_score=eval_result.score,
-                rag_passed=eval_result.passed,
-                tool_called=tool_called,
-                tool_result=tool_result,
-            ))
+            steps.append(
+                AgentStep(
+                    iteration=iteration,
+                    query_used=current_query,
+                    rag_score=eval_result.score,
+                    rag_passed=eval_result.passed,
+                    tool_called=tool_called,
+                    tool_result=tool_result,
+                )
+            )
 
             self._log_via_mcp(current_query, iteration, eval_result.score)
 
@@ -141,10 +144,7 @@ class AgentLoop:
         if not self._available_tools:
             return {"needs_external_tool": False, "reasoning": "brak narzędzi MCP"}
 
-        tools_list = "\n".join(
-            f"- {t['name']}: {t.get('description', '')}"
-            for t in self._available_tools
-        )
+        tools_list = "\n".join(f"- {t['name']}: {t.get('description', '')}" for t in self._available_tools)
         prompt = THINK_PROMPT.format(query=query, tools_list=tools_list)
 
         try:
@@ -184,13 +184,11 @@ class AgentLoop:
         """Loguje iterację przez narzędzie MCP — opcjonalne, nie blokuje agenta."""
         if self._mcp is None:
             return
-        try:
+        with contextlib.suppress(Exception):
             self._mcp.call_tool(
                 "log_query",
                 {"query": query, "iteration": iteration, "score": score},
             )
-        except Exception:
-            pass
 
     def _refresh_tools(self) -> None:
         if self._mcp is None:

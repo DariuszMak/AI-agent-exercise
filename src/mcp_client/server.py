@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any
@@ -47,6 +47,7 @@ class MCPServer:
             def log_query(query: str, level: str = "info") -> str:
                 ...
         """
+
         def decorator(fn):
             self._tools[name] = {
                 "name": name,
@@ -56,10 +57,10 @@ class MCPServer:
             }
             logger.info("Zarejestrowano narzędzie MCP: %s", name)
             return fn
+
         return decorator
 
     def run(self) -> None:
-        tools_ref = self._tools
         server_ref = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -87,12 +88,7 @@ class MCPServer:
 
         try:
             if method == "tools/list":
-                result = {
-                    "tools": [
-                        {k: v for k, v in t.items() if k != "_fn"}
-                        for t in self._tools.values()
-                    ]
-                }
+                result = {"tools": [{k: v for k, v in t.items() if k != "_fn"} for t in self._tools.values()]}
             elif method == "tools/call":
                 result = self._call_tool(params)
             else:
@@ -167,7 +163,7 @@ server = MCPServer()
 def log_query(query: str, iteration: int = 0, score: float = 0.0) -> str:
     _LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     entry = {
-        "ts": datetime.now(tz=timezone.utc).isoformat(),
+        "ts": datetime.now(tz=UTC).isoformat(),
         "query": query,
         "iteration": iteration,
         "score": score,
