@@ -13,7 +13,6 @@ _LOG_FILE = Path("storage/query_log.jsonl")
 
 
 class MCPServer:
-
     def __init__(self, host: str = "localhost", port: int = 8765) -> None:
         self._host = host
         self._port = port

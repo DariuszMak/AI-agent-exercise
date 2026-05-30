@@ -22,7 +22,7 @@ def build_agent():
     from src.mcp_client.client import MCPClient
     from src.rag.evaluator import RAGEvaluator
     from src.rag.index import IndexStore
-    from src.rag.retriever import AgenticRetriever
+    from src.rag.agentic_retriever import AgenticRetriever
     from src.rag.rewriter import RAGRewriter
 
     logger.info("Ładuję indeks FAISS z %s", INDEX_PATH)
