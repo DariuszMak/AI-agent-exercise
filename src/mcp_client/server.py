@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any
@@ -13,6 +13,18 @@ _LOG_FILE = Path("storage/query_log.jsonl")
 
 
 class MCPServer:
+    """
+    Minimalny, lokalny serwer MCP zgodny z JSON-RPC 2.0.
+
+    Rejestruje narzędzia jako zwykłe funkcje Pythona za pomocą
+    dekoratora @server.tool(). To wzorzec identyczny z tym,
+    czego używa oficjalna biblioteka 'mcp' od Anthropic.
+
+    Uruchomienie:
+        server = MCPServer(host="localhost", port=8765)
+        server.run()
+    """
+
     def __init__(self, host: str = "localhost", port: int = 8765) -> None:
         self._host = host
         self._port = port
@@ -23,6 +35,18 @@ class MCPServer:
         return f"http://{self._host}:{self._port}"
 
     def tool(self, name: str, description: str, input_schema: dict[str, Any]):
+        """
+        Dekorator rejestrujący funkcję jako narzędzie MCP.
+
+        Użycie:
+            @server.tool(
+                name="log_query",
+                description="Zapisuje zapytanie do logu",
+                input_schema={"type": "object", "properties": {...}}
+            )
+            def log_query(query: str, level: str = "info") -> str:
+                ...
+        """
         def decorator(fn):
             self._tools[name] = {
                 "name": name,
@@ -32,10 +56,10 @@ class MCPServer:
             }
             logger.info("Zarejestrowano narzędzie MCP: %s", name)
             return fn
-
         return decorator
 
     def run(self) -> None:
+        tools_ref = self._tools
         server_ref = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -63,7 +87,12 @@ class MCPServer:
 
         try:
             if method == "tools/list":
-                result = {"tools": [{k: v for k, v in t.items() if k != "_fn"} for t in self._tools.values()]}
+                result = {
+                    "tools": [
+                        {k: v for k, v in t.items() if k != "_fn"}
+                        for t in self._tools.values()
+                    ]
+                }
             elif method == "tools/call":
                 result = self._call_tool(params)
             else:
@@ -77,6 +106,8 @@ class MCPServer:
     def _call_tool(self, params: dict[str, Any]) -> dict[str, Any]:
         name = params.get("name", "")
         arguments = params.get("arguments", {})
+        if not isinstance(arguments, dict):
+            arguments = {}
 
         if name not in self._tools:
             return {
@@ -84,8 +115,25 @@ class MCPServer:
                 "content": [{"type": "text", "text": f"Nieznane narzędzie: {name}"}],
             }
 
-        fn = self._tools[name]["_fn"]
-        output = fn(**arguments)
+        tool = self._tools[name]
+        fn = tool["_fn"]
+
+        required = tool.get("inputSchema", {}).get("required", [])
+        missing = [r for r in required if r not in arguments]
+        if missing:
+            return {
+                "isError": True,
+                "content": [{"type": "text", "text": f"Brakujące argumenty: {missing}"}],
+            }
+
+        try:
+            output = fn(**arguments)
+        except TypeError as exc:
+            return {
+                "isError": True,
+                "content": [{"type": "text", "text": f"Błąd wywołania: {exc}"}],
+            }
+
         return {
             "isError": False,
             "content": [{"type": "text", "text": str(output)}],
@@ -119,7 +167,7 @@ server = MCPServer()
 def log_query(query: str, iteration: int = 0, score: float = 0.0) -> str:
     _LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     entry = {
-        "ts": datetime.now(tz=UTC).isoformat(),
+        "ts": datetime.now(tz=timezone.utc).isoformat(),
         "query": query,
         "iteration": iteration,
         "score": score,
