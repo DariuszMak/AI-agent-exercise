@@ -1,37 +1,47 @@
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
-import numpy as np
-
-from .embeddings import embed
-
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     import faiss
 
+logger = logging.getLogger(__name__)
 
-def search(
-    index: faiss.Index,
-    documents: Sequence[dict[str, Any]],
-    query: str,
-    k: int = 3,
-) -> list[dict[str, Any]]:
-    query_vec = np.array([embed(query)], dtype="float32")
-    scores, ids = index.search(query_vec, k)
 
-    results = []
-    for rank, i in enumerate(ids[0]):
-        doc = documents[i]
-        results.append({
-            "id": doc["id"],
-            "chunk_id": doc["chunk_id"],
-            "score": float(scores[0][rank]),
-            "text": doc["text"],
-            "token_count": doc.get("token_count"),
-            "char_start": doc.get("char_start"),
-            "char_end": doc.get("char_end"),
-        })
+class AgenticRetriever:
+    """
+    Cienka warstwa adaptera wokół istniejącego kodu FAISS z src/rag/retriever.py.
 
-    return results
+    Przechowuje referencję do indeksu i dokumentów — agent nie musi
+    wiedzieć nic o FAISS, operuje tylko na słownikach Pythona.
+    """
+
+    def __init__(
+        self,
+        index: faiss.Index,
+        documents: list[dict[str, Any]],
+    ) -> None:
+        self._index = index
+        self._documents = documents
+
+    def search(self, query: str, k: int = 5) -> list[dict[str, Any]]:
+        from src.rag.retriever import search as faiss_search
+
+        results = faiss_search(self._index, self._documents, query, k=k)
+        logger.debug("FAISS zwrócił %d wyników dla query=%r", len(results), query[:60])
+        return results
+
+    @classmethod
+    def from_index_store(cls, store: Any) -> AgenticRetriever:
+        """
+        Fabryczna metoda tworząca retriever z IndexStore z oryginalnego kodu.
+
+        Użycie:
+            from src.rag.index import IndexStore
+            store = IndexStore.load(index_path, docstore_path)
+            retriever = AgenticRetriever.from_index_store(store)
+        """
+        if not store.ready:
+            raise ValueError("IndexStore nie jest gotowy — najpierw wywołaj store.build()")
+        return cls(index=store.index, documents=store.documents)
