@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol, Any, cast
 
 if TYPE_CHECKING:
     from src.llm import OllamaAdapter
 
 logger = logging.getLogger(__name__)
+
+
+class LLMProtocol(Protocol):
+    def complete(self, prompt: str, temperature: float = 0.0) -> Any: ...
+
 
 _REWRITE_PROMPT = """\
 Jesteś ekspertem od wyszukiwania informacji.
@@ -27,7 +32,7 @@ Wygeneruj JEDNO nowe, ulepszone zapytanie do wyszukiwarki.
 
 
 class RAGRewriter:
-    def __init__(self, llm: OllamaAdapter | None = None) -> None:
+    def __init__(self, llm: LLMProtocol | None = None) -> None:
         self._llm = llm
 
     def rewrite(
@@ -51,13 +56,20 @@ class RAGRewriter:
         failed_query: str,
         reason: str,
     ) -> str:
+        llm = self._llm
+        if llm is None:
+            raise ValueError("LLM is not available")
+
         prompt = _REWRITE_PROMPT.format(
             original_query=original_query,
             failed_query=failed_query,
             reason=reason,
         )
-        response = self._llm.complete(prompt, temperature=0.3)
-        rewritten = response.content.strip().strip('"').strip("'")
+
+        response = llm.complete(prompt, temperature=0.3)
+
+        rewritten = str(getattr(response, "content", "")).strip().strip('"').strip("'")
+
         logger.info("Przepisano zapytanie: %r → %r", failed_query, rewritten)
         return rewritten
 
@@ -68,7 +80,6 @@ class RAGRewriter:
             lambda q: q + " definicja",
             lambda q: q.split()[0] if q.split() else q,
         ]
+
         idx = (iteration - 1) % len(strategies)
-        rewritten = strategies[idx](query)
-        logger.info("Heurystyczne przepisanie zapytania: %r → %r", query, rewritten)
-        return rewritten
+        return strategies[idx](query)
