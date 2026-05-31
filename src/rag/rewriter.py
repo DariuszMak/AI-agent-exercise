@@ -4,6 +4,8 @@ import logging
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from src.llm import OllamaAdapter
 
 logger = logging.getLogger(__name__)
@@ -71,7 +73,8 @@ class RAGRewriter:
         return rewritten
 
     def _rewrite_heuristic(self, query: str, iteration: int) -> str:
-        strategies = [
+        # Jawne otypowanie funkcji lambda rozwiązuje problem z Any
+        strategies: list[Callable[[str], str]] = [
             lambda q: q.lower(),
             lambda q: " ".join(dict.fromkeys(q.split())),
             lambda q: q + " definicja",
