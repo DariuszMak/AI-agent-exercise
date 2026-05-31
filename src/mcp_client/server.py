@@ -155,7 +155,7 @@ server = MCPServer()
         "properties": {
             "query": {"type": "string", "description": "Treść zapytania"},
             "iteration": {"type": "integer", "description": "Numer iteracji agenta"},
-            "score": {"type": "number", "description": "Ocena jakości RAG (0.0–1.0)"},
+            "score": {"type": "number", "description": "Ocena jakości RAG (0.0-1.0)"},
         },
         "required": ["query"],
     },
