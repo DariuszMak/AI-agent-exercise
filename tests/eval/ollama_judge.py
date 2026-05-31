@@ -12,7 +12,7 @@ class JudgeResult(TypedDict):
     reason: str
 
 
-_client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1")
+_client = OpenAI(api_key="ollama", base_url="http://localhost:11434/v1", timeout=120.0)
 _MODEL = "gemma:2b"
 
 
