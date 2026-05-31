@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlparse
 
 import requests
@@ -103,7 +103,13 @@ class OllamaAdapter:
                 timeout=self._timeout,
             )
             response.raise_for_status()
-            return response.json()
+
+            data = response.json()
+
+            if not isinstance(data, dict):
+                raise TypeError(f"Expected dict from Ollama, got {type(data).__name__}")
+
+            return cast("dict[str, Any]", data)
 
         except requests.RequestException as exc:
             logger.exception(
