@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import sys
 from pathlib import Path
+from typing import Any
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,7 +17,7 @@ DOCSTORE_PATH = Path("storage/documents/EN.json")
 MCP_SERVER_URL = "http://localhost:8765"
 
 
-def build_agent():
+def build_agent() -> Any:
     from src.agent.loop import AgentLoop
     from src.llm import OllamaAdapter
     from src.mcp_client.client import MCPClient
