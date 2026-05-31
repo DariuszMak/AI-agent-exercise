@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
     from src.llm import OllamaAdapter
@@ -51,13 +51,22 @@ class RAGRewriter:
         failed_query: str,
         reason: str,
     ) -> str:
+        # mypy: zawężenie typu z Optional -> OllamaAdapter
+        llm = cast("OllamaAdapter", self._llm)
+
         prompt = _REWRITE_PROMPT.format(
             original_query=original_query,
             failed_query=failed_query,
             reason=reason,
         )
-        response = self._llm.complete(prompt, temperature=0.3)
-        rewritten = response.content.strip().strip('"').strip("'")
+
+        response = llm.complete(prompt, temperature=0.3)
+
+        # response.content może być Any → wymuszamy str
+        content = str(getattr(response, "content", "")).strip()
+
+        rewritten = content.strip('"').strip("'")
+
         logger.info("Przepisano zapytanie: %r → %r", failed_query, rewritten)
         return rewritten
 
@@ -68,7 +77,9 @@ class RAGRewriter:
             lambda q: q + " definicja",
             lambda q: q.split()[0] if q.split() else q,
         ]
+
         idx = (iteration - 1) % len(strategies)
         rewritten = strategies[idx](query)
+
         logger.info("Heurystyczne przepisanie zapytania: %r → %r", query, rewritten)
         return rewritten
