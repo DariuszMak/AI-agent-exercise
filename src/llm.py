@@ -4,8 +4,9 @@ import json
 import logging
 from dataclasses import dataclass
 from typing import Any
-from urllib import request as urllib_request
-from urllib.error import URLError
+from urllib.parse import urlparse
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -42,15 +43,22 @@ class OllamaAdapter:
             "stream": False,
             "options": {"temperature": temperature},
         }
+
         raw = self._post("/api/chat", payload)
+
         content: str = raw.get("message", {}).get("content", "")
+
         return LLMResponse(
             content=content.strip(),
             model=raw.get("model", self._model),
             done=raw.get("done", True),
         )
 
-    def complete(self, prompt: str, temperature: float = 0.0) -> LLMResponse:
+    def complete(
+        self,
+        prompt: str,
+        temperature: float = 0.0,
+    ) -> LLMResponse:
         return self.chat(
             messages=[{"role": "user", "content": prompt}],
             temperature=temperature,
@@ -58,28 +66,61 @@ class OllamaAdapter:
 
     def complete_json(self, prompt: str) -> Any:
         json_prompt = (
-            f"{prompt}\n\nOdpowiedz WYŁĄCZNIE poprawnym JSON-em, bez żadnego dodatkowego tekstu ani bloków kodu."
+            f"{prompt}\n\n"
+            "Odpowiedz WYŁĄCZNIE poprawnym JSON-em, "
+            "bez żadnego dodatkowego tekstu ani bloków kodu."
         )
-        response = self.complete(json_prompt, temperature=0.0)
-        raw = response.content.strip().removeprefix("```json").removesuffix("```").strip()
+
+        response = self.complete(
+            json_prompt,
+            temperature=0.0,
+        )
+
+        raw = (
+            response.content.strip()
+            .removeprefix("```json")
+            .removesuffix("```")
+            .strip()
+        )
+
         try:
             return json.loads(raw)
         except json.JSONDecodeError as exc:
-            logger.warning("LLM zwrócił niepoprawny JSON: %s", raw[:200])
-            raise ValueError(f"Niepoprawny JSON od LLM: {raw[:200]}") from exc
+            logger.warning(
+                "LLM zwrócił niepoprawny JSON: %s",
+                raw[:200],
+            )
+            raise ValueError(
+                f"Niepoprawny JSON od LLM: {raw[:200]}"
+            ) from exc
 
-    def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+    def _post(
+        self,
+        path: str,
+        payload: dict[str, Any],
+    ) -> dict[str, Any]:
         url = f"{self._base_url}{path}"
-        data = json.dumps(payload).encode()
-        req = urllib_request.Request(
-            url,
-            data=data,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
+
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"}:
+            raise ValueError(
+                f"Nieobsługiwany schemat URL: {parsed.scheme}"
+            )
+
         try:
-            with urllib_request.urlopen(req, timeout=self._timeout) as resp:
-                return json.loads(resp.read().decode())
-        except URLError as exc:
-            logger.exception("Błąd połączenia z Ollama pod %s", url)
-            raise ConnectionError(f"Ollama niedostępna: {exc}") from exc
+            response = requests.post(
+                url,
+                json=payload,
+                timeout=self._timeout,
+            )
+            response.raise_for_status()
+            return response.json()
+
+        except requests.RequestException as exc:
+            logger.exception(
+                "Błąd połączenia z Ollama pod %s",
+                url,
+            )
+            raise ConnectionError(
+                f"Ollama niedostępna: {exc}"
+            ) from exc
