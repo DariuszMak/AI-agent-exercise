@@ -3,7 +3,7 @@ from __future__ import annotations
 import contextlib
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from src.agent.prompts import ANSWER_PROMPT, THINK_PROMPT
 from src.rag.evaluator import RAGEvaluator
@@ -143,7 +143,7 @@ class AgentLoop:
         )
 
         try:
-            decision = self._llm.complete_json(prompt)
+            decision: Any = self._llm.complete_json(prompt)
             logger.debug("THINK decision: %s", decision)
         except (ValueError, ConnectionError) as exc:
             logger.warning("THINK fallback do RAG (błąd LLM): %s", exc)
@@ -152,7 +152,7 @@ class AgentLoop:
                 "reasoning": f"fallback: {exc}",
             }
         else:
-            return decision
+            return cast("dict[str, Any]", decision)
 
     def _act_mcp(
         self,
@@ -173,10 +173,7 @@ class AgentLoop:
         result = self._mcp.call_tool(tool_name, tool_args)
 
         if result.is_error:
-            logger.warning(
-                "Narzędzie MCP zwróciło błąd: %s",
-                result.error_message,
-            )
+            logger.warning("Narzędzie MCP zwróciło błąd: %s", result.error_message)
             return tool_name, None
 
         return tool_name, str(result.content)
