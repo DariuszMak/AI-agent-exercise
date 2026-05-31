@@ -5,8 +5,8 @@ import logging
 import uuid
 from dataclasses import dataclass, field
 from typing import Any
-from urllib import request as urllib_request
-from urllib.error import URLError
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -33,20 +33,38 @@ class MCPClient:
 
     def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> MCPToolResult:
         try:
-            result = self._rpc("tools/call", {"name": tool_name, "arguments": arguments})
+            result = self._rpc(
+                "tools/call",
+                {"name": tool_name, "arguments": arguments},
+            )
+
             content = result.get("content", [])
+
             if result.get("isError"):
                 error_text = _extract_text(content)
-                logger.warning("Narzędzie %s zwróciło błąd: %s", tool_name, error_text)
+                logger.warning(
+                    "Narzędzie %s zwróciło błąd: %s",
+                    tool_name,
+                    error_text,
+                )
                 return MCPToolResult(
                     tool_name=tool_name,
                     content=None,
                     is_error=True,
                     error_message=error_text,
                 )
-            return MCPToolResult(tool_name=tool_name, content=_extract_text(content))
+
+            return MCPToolResult(
+                tool_name=tool_name,
+                content=_extract_text(content),
+            )
+
         except (ConnectionError, TimeoutError, ValueError) as exc:
-            logger.debug("Wywołanie narzędzia %s nie powiodło się: %s", tool_name, exc)
+            logger.debug(
+                "Wywołanie narzędzia %s nie powiodło się: %s",
+                tool_name,
+                exc,
+            )
             return MCPToolResult(
                 tool_name=tool_name,
                 content=None,
@@ -56,34 +74,40 @@ class MCPClient:
 
     def _rpc(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         request_id = str(uuid.uuid4())
+
         payload = {
             "jsonrpc": "2.0",
             "id": request_id,
             "method": method,
             "params": params,
         }
+
         logger.debug("MCP RPC → %s %s", method, params)
 
-        data = json.dumps(payload).encode()
-        req = urllib_request.Request(
-            self.server_url,
-            data=data,
-            headers={
-                "Content-Type": "application/json",
-                "X-Session-Id": self._session_id,
-            },
-            method="POST",
-        )
-
         try:
-            with urllib_request.urlopen(req, timeout=self.timeout) as resp:
-                body: dict[str, Any] = json.loads(resp.read().decode())
-        except URLError as exc:
-            raise ConnectionError(f"Serwer MCP niedostępny ({self.server_url}): {exc}") from exc
+            response = requests.post(
+                self.server_url,
+                json=payload,
+                headers={
+                    "Content-Type": "application/json",
+                    "X-Session-Id": self._session_id,
+                },
+                timeout=self.timeout,
+            )
+
+            response.raise_for_status()
+            body: dict[str, Any] = response.json()
+
+        except requests.RequestException as exc:
+            raise ConnectionError(
+                f"Serwer MCP niedostępny ({self.server_url}): {exc}"
+            ) from exc
 
         if "error" in body:
             err = body["error"]
-            raise ValueError(f"JSON-RPC error {err.get('code')}: {err.get('message')}")
+            raise ValueError(
+                f"JSON-RPC error {err.get('code')}: {err.get('message')}"
+            )
 
         return body.get("result", {})
 
@@ -91,5 +115,11 @@ class MCPClient:
 def _extract_text(content: list[dict[str, Any]] | Any) -> str:
     if not isinstance(content, list):
         return str(content)
-    texts = [block.get("text", "") for block in content if block.get("type") == "text"]
+
+    texts = [
+        block.get("text", "")
+        for block in content
+        if isinstance(block, dict) and block.get("type") == "text"
+    ]
+
     return "\n".join(texts)

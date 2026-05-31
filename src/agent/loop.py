@@ -92,12 +92,24 @@ class AgentLoop:
             self._log_via_mcp(current_query, iteration, eval_result.score)
 
             if eval_result.passed:
-                logger.info("Wyniki wystarczające (score=%.3f) — generuję odpowiedź", eval_result.score)
+                logger.info(
+                    "Wyniki wystarczające (score=%.3f) — generuję odpowiedź",
+                    eval_result.score,
+                )
                 context_chunks.extend(r["text"] for r in rag_results)
-                return self._build_result(query, context_chunks, steps, eval_result.score, iteration)
+                return self._build_result(
+                    query,
+                    context_chunks,
+                    steps,
+                    eval_result.score,
+                    iteration,
+                )
 
             if iteration < self._max_iter:
-                logger.info("Przepisuję zapytanie (score=%.3f < próg)", eval_result.score)
+                logger.info(
+                    "Przepisuję zapytanie (score=%.3f < próg)",
+                    eval_result.score,
+                )
                 current_query = self._rewriter.rewrite(
                     original_query=query,
                     failed_query=current_query,
@@ -105,27 +117,53 @@ class AgentLoop:
                     iteration=iteration,
                 )
             else:
-                logger.warning("Osiągnięto limit iteracji — odpowiadam z najlepszym kontekstem")
+                logger.warning(
+                    "Osiągnięto limit iteracji — odpowiadam z najlepszym kontekstem"
+                )
                 context_chunks.extend(r["text"] for r in rag_results)
 
-        return self._build_result(query, context_chunks, steps, 0.0, self._max_iter)
+        return self._build_result(
+            query,
+            context_chunks,
+            steps,
+            0.0,
+            self._max_iter,
+        )
 
     def _think(self, query: str) -> dict[str, Any]:
         if not self._available_tools:
-            return {"needs_external_tool": False, "reasoning": "brak narzędzi MCP"}
+            return {
+                "needs_external_tool": False,
+                "reasoning": "brak narzędzi MCP",
+            }
 
-        tools_list = "\n".join(f"- {t['name']}: {t.get('description', '')}" for t in self._available_tools)
-        prompt = THINK_PROMPT.format(query=query, tools_list=tools_list)
+        tools_list = "\n".join(
+            f"- {t['name']}: {t.get('description', '')}"
+            for t in self._available_tools
+        )
+
+        prompt = THINK_PROMPT.format(
+            query=query,
+            tools_list=tools_list,
+        )
 
         try:
             decision = self._llm.complete_json(prompt)
             logger.debug("THINK decision: %s", decision)
-            return decision
         except (ValueError, ConnectionError) as exc:
             logger.warning("THINK fallback do RAG (błąd LLM): %s", exc)
-            return {"needs_external_tool": False, "reasoning": f"fallback: {exc}"}
+            return {
+                "needs_external_tool": False,
+                "reasoning": f"fallback: {exc}",
+            }
+        else:
+            return decision
 
-    def _act_mcp(self, think_result: dict[str, Any], query: str = "") -> tuple[str | None, str | None]:
+    def _act_mcp(
+        self,
+        think_result: dict[str, Any],
+        query: str = "",
+    ) -> tuple[str | None, str | None]:
         tool_name: str | None = think_result.get("tool_name")
         tool_args: dict[str, Any] = think_result.get("tool_arguments") or {}
 
@@ -136,10 +174,14 @@ class AgentLoop:
             tool_args = {"topic": query[:80]}
 
         logger.info("ACT MCP | tool=%s args=%s", tool_name, tool_args)
+
         result = self._mcp.call_tool(tool_name, tool_args)
 
         if result.is_error:
-            logger.warning("Narzędzie MCP zwróciło błąd: %s", result.error_message)
+            logger.warning(
+                "Narzędzie MCP zwróciło błąd: %s",
+                result.error_message,
+            )
             return tool_name, None
 
         return tool_name, str(result.content)
@@ -148,22 +190,36 @@ class AgentLoop:
         logger.info("ACT RAG | query=%r", query[:80])
         return self._retriever.search(query, k=5)
 
-    def _log_via_mcp(self, query: str, iteration: int, score: float) -> None:
+    def _log_via_mcp(
+        self,
+        query: str,
+        iteration: int,
+        score: float,
+    ) -> None:
         if self._mcp is None:
             return
+
         with contextlib.suppress(Exception):
             self._mcp.call_tool(
                 "log_query",
-                {"query": query, "iteration": iteration, "score": score},
+                {
+                    "query": query,
+                    "iteration": iteration,
+                    "score": score,
+                },
             )
 
     def _refresh_tools(self) -> None:
         if self._mcp is None:
             return
+
         try:
             self._available_tools = self._mcp.list_tools()
         except ConnectionError as exc:
-            logger.warning("Nie udało się pobrać listy narzędzi MCP: %s", exc)
+            logger.warning(
+                "Nie udało się pobrać listy narzędzi MCP: %s",
+                exc,
+            )
             self._available_tools = []
 
     def _build_result(
@@ -174,16 +230,32 @@ class AgentLoop:
         final_score: float,
         iterations: int,
     ) -> AgentResult:
-        context = "\n\n---\n\n".join(context_chunks) if context_chunks else "Brak kontekstu."
-        prompt = ANSWER_PROMPT.format(context=context, question=original_query)
+        context = (
+            "\n\n---\n\n".join(context_chunks)
+            if context_chunks
+            else "Brak kontekstu."
+        )
+
+        prompt = ANSWER_PROMPT.format(
+            context=context,
+            question=original_query,
+        )
 
         try:
-            response = self._llm.complete(prompt, temperature=0.0)
+            response = self._llm.complete(
+                prompt,
+                temperature=0.0,
+            )
             answer = response.content
         except ConnectionError as exc:
             answer = f"[Błąd LLM: {exc}]"
 
-        logger.info("Agent DONE | iterations=%d, score=%.3f", iterations, final_score)
+        logger.info(
+            "Agent DONE | iterations=%d, score=%.3f",
+            iterations,
+            final_score,
+        )
+
         return AgentResult(
             answer=answer,
             steps=steps,
