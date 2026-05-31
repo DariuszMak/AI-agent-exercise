@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import uuid
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 import requests
 
@@ -27,7 +27,7 @@ class MCPClient:
     def list_tools(self) -> list[dict[str, Any]]:
         result = self._rpc("tools/list", {})
         tools: list[dict[str, Any]] = result.get("tools", [])
-        logger.debug("Dostępne narzędzia MCP: %s", [t["name"] for t in tools])
+        logger.debug("Dostępne narzędzia MCP: %s", [t.get("name") for t in tools])
         return tools
 
     def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> MCPToolResult:
@@ -74,7 +74,7 @@ class MCPClient:
     def _rpc(self, method: str, params: dict[str, Any]) -> dict[str, Any]:
         request_id = str(uuid.uuid4())
 
-        payload = {
+        payload: dict[str, Any] = {
             "jsonrpc": "2.0",
             "id": request_id,
             "method": method,
@@ -86,7 +86,7 @@ class MCPClient:
         try:
             response = requests.post(
                 self.server_url,
-                json=payload,
+                json=cast("Any", payload),
                 headers={
                     "Content-Type": "application/json",
                     "X-Session-Id": self._session_id,
@@ -104,7 +104,8 @@ class MCPClient:
             err = body["error"]
             raise ValueError(f"JSON-RPC error {err.get('code')}: {err.get('message')}")
 
-        return body.get("result", {})
+        result = body.get("result", {})
+        return result if isinstance(result, dict) else {}
 
 
 def _extract_text(content: list[dict[str, Any]] | Any) -> str:
