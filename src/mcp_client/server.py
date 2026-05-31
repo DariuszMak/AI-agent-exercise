@@ -13,18 +13,6 @@ _LOG_FILE = Path("storage/query_log.jsonl")
 
 
 class MCPServer:
-    """
-    Minimalny, lokalny serwer MCP zgodny z JSON-RPC 2.0.
-
-    Rejestruje narzędzia jako zwykłe funkcje Pythona za pomocą
-    dekoratora @server.tool(). To wzorzec identyczny z tym,
-    czego używa oficjalna biblioteka 'mcp' od Anthropic.
-
-    Uruchomienie:
-        server = MCPServer(host="localhost", port=8765)
-        server.run()
-    """
-
     def __init__(self, host: str = "localhost", port: int = 8765) -> None:
         self._host = host
         self._port = port
@@ -35,19 +23,6 @@ class MCPServer:
         return f"http://{self._host}:{self._port}"
 
     def tool(self, name: str, description: str, input_schema: dict[str, Any]):
-        """
-        Dekorator rejestrujący funkcję jako narzędzie MCP.
-
-        Użycie:
-            @server.tool(
-                name="log_query",
-                description="Zapisuje zapytanie do logu",
-                input_schema={"type": "object", "properties": {...}}
-            )
-            def log_query(query: str, level: str = "info") -> str:
-                ...
-        """
-
         def decorator(fn):
             self._tools[name] = {
                 "name": name,

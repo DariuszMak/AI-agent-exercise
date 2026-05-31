@@ -21,8 +21,6 @@ MAX_ITERATIONS = 3
 
 @dataclass
 class AgentStep:
-    """Pojedynczy krok w historii wykonania agenta — do debugowania i logów."""
-
     iteration: int
     query_used: str
     rag_score: float
@@ -40,30 +38,6 @@ class AgentResult:
 
 
 class AgentLoop:
-    """
-    Pętla agentowa: Think → Act → Observe → (repeat or Answer)
-
-    ┌─────────────────────────────────────────────┐
-    │  THINK   Czy potrzebuję narzędzia zewn.?     │
-    │          LLM analizuje pytanie i narzędzia   │
-    └──────────┬──────────────┬────────────────────┘
-               │ TAK          │ NIE
-               ▼              ▼
-    ┌───────────────┐   ┌─────────────────────┐
-    │  ACT (MCP)    │   │  ACT (RAG)          │
-    │  Wywołaj tool │   │  Wyszukaj w FAISS   │
-    └───────┬───────┘   └──────────┬──────────┘
-            │                      │
-            └──────────┬───────────┘
-                       ▼
-    ┌──────────────────────────────────────────────┐
-    │  OBSERVE  Oceń jakość wyników                │
-    │           score ≥ threshold → ANSWER        │
-    │           score < threshold → REWRITE query  │
-    │           max_iterations reached → ANSWER    │
-    └──────────────────────────────────────────────┘
-    """
-
     def __init__(
         self,
         llm: OllamaAdapter,
@@ -137,10 +111,6 @@ class AgentLoop:
         return self._build_result(query, context_chunks, steps, 0.0, self._max_iter)
 
     def _think(self, query: str) -> dict[str, Any]:
-        """
-        Faza THINK: LLM decyduje, czy potrzebne jest narzędzie zewnętrzne.
-        Jeśli LLM nie odpowie poprawnym JSON-em — bezpiecznie fallback do RAG.
-        """
         if not self._available_tools:
             return {"needs_external_tool": False, "reasoning": "brak narzędzi MCP"}
 
@@ -156,7 +126,6 @@ class AgentLoop:
             return {"needs_external_tool": False, "reasoning": f"fallback: {exc}"}
 
     def _act_mcp(self, think_result: dict[str, Any], query: str = "") -> tuple[str | None, str | None]:
-        """Faza ACT: wywołuje narzędzie MCP wskazane przez fazę THINK."""
         tool_name: str | None = think_result.get("tool_name")
         tool_args: dict[str, Any] = think_result.get("tool_arguments") or {}
 
@@ -176,12 +145,10 @@ class AgentLoop:
         return tool_name, str(result.content)
 
     def _act_rag(self, query: str) -> list[dict[str, Any]]:
-        """Faza ACT: wyszukuje fragmenty w lokalnym indeksie FAISS."""
         logger.info("ACT RAG | query=%r", query[:80])
         return self._retriever.search(query, k=5)
 
     def _log_via_mcp(self, query: str, iteration: int, score: float) -> None:
-        """Loguje iterację przez narzędzie MCP — opcjonalne, nie blokuje agenta."""
         if self._mcp is None:
             return
         with contextlib.suppress(Exception):
