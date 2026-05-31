@@ -117,9 +117,7 @@ class AgentLoop:
                     iteration=iteration,
                 )
             else:
-                logger.warning(
-                    "Osiągnięto limit iteracji — odpowiadam z najlepszym kontekstem"
-                )
+                logger.warning("Osiągnięto limit iteracji — odpowiadam z najlepszym kontekstem")
                 context_chunks.extend(r["text"] for r in rag_results)
 
         return self._build_result(
@@ -137,10 +135,7 @@ class AgentLoop:
                 "reasoning": "brak narzędzi MCP",
             }
 
-        tools_list = "\n".join(
-            f"- {t['name']}: {t.get('description', '')}"
-            for t in self._available_tools
-        )
+        tools_list = "\n".join(f"- {t['name']}: {t.get('description', '')}" for t in self._available_tools)
 
         prompt = THINK_PROMPT.format(
             query=query,
@@ -230,11 +225,7 @@ class AgentLoop:
         final_score: float,
         iterations: int,
     ) -> AgentResult:
-        context = (
-            "\n\n---\n\n".join(context_chunks)
-            if context_chunks
-            else "Brak kontekstu."
-        )
+        context = "\n\n---\n\n".join(context_chunks) if context_chunks else "Brak kontekstu."
 
         prompt = ANSWER_PROMPT.format(
             context=context,

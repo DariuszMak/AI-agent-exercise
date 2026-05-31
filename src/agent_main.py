@@ -60,7 +60,7 @@ def main() -> None:
     agent = build_agent()
     result = agent.run(query)
 
-    for step in result.steps:
+    for _step in result.steps:
         pass
 
 
