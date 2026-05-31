@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import json
 import logging
+from collections.abc import Callable
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, TypeVar, cast
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +50,7 @@ class MCPServer:
             def do_POST(self) -> None:
                 length = int(self.headers.get("Content-Length", 0))
                 body = json.loads(self.rfile.read(length).decode())
-                response = server_ref._dispatch(cast(dict[str, Any], body))
+                response = server_ref._dispatch(cast("dict[str, Any]", body))
 
                 payload = json.dumps(response).encode()
 
@@ -58,7 +59,7 @@ class MCPServer:
                 self.end_headers()
                 self.wfile.write(payload)
 
-            def log_message(self, format: str, *args: object) -> None:
+            def log_message(self, log_format: str, *args: object) -> None:
                 pass
 
         httpd = HTTPServer((self._host, self._port), Handler)
@@ -72,14 +73,9 @@ class MCPServer:
 
         try:
             if method == "tools/list":
-                result = {
-                    "tools": [
-                        {k: v for k, v in t.items() if k != "_fn"}
-                        for t in self._tools.values()
-                    ]
-                }
+                result = {"tools": [{k: v for k, v in t.items() if k != "_fn"} for t in self._tools.values()]}
             elif method == "tools/call":
-                result = self._call_tool(cast(dict[str, Any], params))
+                result = self._call_tool(cast("dict[str, Any]", params))
             else:
                 return _error(req_id, -32601, f"Nieznana metoda: {method}")
         except Exception as exc:
@@ -107,7 +103,7 @@ class MCPServer:
             }
 
         tool = self._tools[name]
-        fn = cast(Callable[..., Any], tool["_fn"])
+        fn = cast("Callable[..., Any]", tool["_fn"])
 
         required = tool.get("inputSchema", {}).get("required", [])
         missing = [r for r in required if r not in arguments]
@@ -214,14 +210,8 @@ def log_query(
 )
 def fetch_external_context(topic: str) -> str:
     external_db: dict[str, str] = {
-        "ksef": (
-            "KSeF (Krajowy System e-Faktur) "
-            "to platforma MF do fakturowania od 2024."
-        ),
-        "camunda": (
-            "Camunda to silnik BPMN/DMN "
-            "do automatyzacji procesów biznesowych."
-        ),
+        "ksef": ("KSeF (Krajowy System e-Faktur) to platforma MF do fakturowania od 2024."),
+        "camunda": ("Camunda to silnik BPMN/DMN do automatyzacji procesów biznesowych."),
     }
 
     key = topic.lower()
