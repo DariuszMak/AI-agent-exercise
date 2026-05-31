@@ -59,7 +59,7 @@ class MCPServer:
                 self.end_headers()
                 self.wfile.write(payload)
 
-            def log_message(self, log_format: str, *args: object) -> None:
+            def log_message(self, _log_format: str, *args: object) -> None:
                 pass
 
         httpd = HTTPServer((self._host, self._port), Handler)
