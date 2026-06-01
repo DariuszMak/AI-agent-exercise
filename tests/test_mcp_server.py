@@ -3,12 +3,12 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
+import pytest
+
 from src.mcp_client.server import MCPServer, _error, fetch_external_context, log_query
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    import pytest
 
 
 class TestMCPServerDispatch:
