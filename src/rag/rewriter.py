@@ -53,7 +53,6 @@ class RAGRewriter:
         failed_query: str,
         reason: str,
     ) -> str:
-        # mypy: zawężenie typu z Optional -> OllamaAdapter
         llm = cast("OllamaAdapter", self._llm)
 
         prompt = _REWRITE_PROMPT.format(
@@ -64,7 +63,6 @@ class RAGRewriter:
 
         response = llm.complete(prompt, temperature=0.3)
 
-        # response.content może być Any → wymuszamy str
         content = str(getattr(response, "content", "")).strip()
 
         rewritten = content.strip('"').strip("'")
@@ -73,7 +71,6 @@ class RAGRewriter:
         return rewritten
 
     def _rewrite_heuristic(self, query: str, iteration: int) -> str:
-        # Jawne otypowanie funkcji lambda rozwiązuje problem z Any
         strategies: list[Callable[[str], str]] = [
             lambda q: q.lower(),
             lambda q: " ".join(dict.fromkeys(q.split())),
