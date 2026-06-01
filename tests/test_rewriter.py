@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
+import pytest
+
 from src.llm import LLMResponse
 from src.rag.rewriter import RAGRewriter
 
@@ -49,8 +51,8 @@ class TestRAGRewriterWithLLM:
         rewriter = RAGRewriter(llm=llm)
         rewriter.rewrite("original", "failed", "reason")
         call_kwargs = llm.complete.call_args
-        assert call_kwargs.kwargs.get("temperature") == 0.3 or (
-            len(call_kwargs.args) > 1 and call_kwargs.args[1] == 0.3
+        assert call_kwargs.kwargs.get("temperature") == pytest.approx(0.3) or (
+            len(call_kwargs.args) > 1 and call_kwargs.args[1] == pytest.approx(0.3)
         )
 
 
