@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
-
-import pytest
+from typing import TYPE_CHECKING
 
 from src.mcp_client.server import MCPServer, _error, fetch_external_context, log_query
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pytest
 
 
 class TestMCPServerDispatch:
@@ -38,7 +41,9 @@ class TestMCPServerDispatch:
 
     def test_tools_call_success(self) -> None:
         req = {
-            "jsonrpc": "2.0", "id": "2", "method": "tools/call",
+            "jsonrpc": "2.0",
+            "id": "2",
+            "method": "tools/call",
             "params": {"name": "echo", "arguments": {"text": "hello"}},
         }
         resp = self.server._dispatch(req)
@@ -47,7 +52,9 @@ class TestMCPServerDispatch:
 
     def test_tools_call_unknown_tool(self) -> None:
         req = {
-            "jsonrpc": "2.0", "id": "3", "method": "tools/call",
+            "jsonrpc": "2.0",
+            "id": "3",
+            "method": "tools/call",
             "params": {"name": "nonexistent", "arguments": {}},
         }
         resp = self.server._dispatch(req)
@@ -56,7 +63,9 @@ class TestMCPServerDispatch:
 
     def test_tools_call_missing_required_arg(self) -> None:
         req = {
-            "jsonrpc": "2.0", "id": "4", "method": "tools/call",
+            "jsonrpc": "2.0",
+            "id": "4",
+            "method": "tools/call",
             "params": {"name": "echo", "arguments": {}},
         }
         resp = self.server._dispatch(req)
@@ -71,7 +80,9 @@ class TestMCPServerDispatch:
 
     def test_tools_call_non_dict_arguments_handled(self) -> None:
         req = {
-            "jsonrpc": "2.0", "id": "6", "method": "tools/call",
+            "jsonrpc": "2.0",
+            "id": "6",
+            "method": "tools/call",
             "params": {"name": "echo", "arguments": None},
         }
         resp = self.server._dispatch(req)
@@ -110,7 +121,9 @@ class TestMCPServerToolDecorator:
             return str(x)
 
         req = {
-            "jsonrpc": "2.0", "id": "1", "method": "tools/call",
+            "jsonrpc": "2.0",
+            "id": "1",
+            "method": "tools/call",
             "params": {"name": "typed", "arguments": {"wrong": "arg"}},
         }
         resp = server._dispatch(req)
@@ -120,6 +133,7 @@ class TestMCPServerToolDecorator:
 class TestBuiltinTools:
     def test_log_query_creates_file(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.mcp_client.server as srv_module
+
         log_path = tmp_path / "query_log.jsonl"
         monkeypatch.setattr(srv_module, "_LOG_FILE", log_path)
 
@@ -136,6 +150,7 @@ class TestBuiltinTools:
 
     def test_log_query_appends_multiple_entries(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.mcp_client.server as srv_module
+
         log_path = tmp_path / "query_log.jsonl"
         monkeypatch.setattr(srv_module, "_LOG_FILE", log_path)
 
@@ -147,6 +162,7 @@ class TestBuiltinTools:
 
     def test_log_query_defaults(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.mcp_client.server as srv_module
+
         log_path = tmp_path / "query_log.jsonl"
         monkeypatch.setattr(srv_module, "_LOG_FILE", log_path)
 

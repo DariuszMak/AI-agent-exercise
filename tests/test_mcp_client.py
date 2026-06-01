@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -108,9 +107,8 @@ class TestMCPClientRpc:
         client = MCPClient(server_url="http://localhost:8765")
         resp = MagicMock()
         resp.raise_for_status.side_effect = requests.HTTPError("503")
-        with patch("requests.post", return_value=resp):
-            with pytest.raises(ConnectionError):
-                client._rpc("tools/list", {})
+        with patch("requests.post", return_value=resp), pytest.raises(ConnectionError):
+            client._rpc("tools/list", {})
 
     def test_rpc_returns_empty_dict_for_non_dict_result(self) -> None:
         client = MCPClient(server_url="http://localhost:8765")

@@ -91,6 +91,7 @@ class TestToolRegistry:
 
     def test_load_from_server(self) -> None:
         from unittest.mock import MagicMock
+
         registry = ToolRegistry()
         mcp_client = MagicMock()
         mcp_client.list_tools.return_value = [

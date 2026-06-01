@@ -87,7 +87,7 @@ class TestOllamaAdapterCompleteJson:
 
     def test_complete_json_strips_markdown_fences(self) -> None:
         adapter = OllamaAdapter()
-        raw = "```json\n{\"a\": 1}\n```"
+        raw = '```json\n{"a": 1}\n```'
         body = {"message": {"content": raw}, "model": "x", "done": True}
         with patch("requests.post", return_value=_make_response(body)):
             result = adapter.complete_json("return json")
@@ -113,9 +113,8 @@ class TestOllamaAdapterPost:
         resp = MagicMock()
         resp.raise_for_status.return_value = None
         resp.json.return_value = ["not", "a", "dict"]
-        with patch("requests.post", return_value=resp):
-            with pytest.raises(TypeError):
-                adapter.complete("hi")
+        with patch("requests.post", return_value=resp), pytest.raises(TypeError):
+            adapter.complete("hi")
 
     def test_post_raises_on_invalid_scheme(self) -> None:
         adapter = OllamaAdapter(base_url="ftp://evil.example.com")
@@ -126,9 +125,8 @@ class TestOllamaAdapterPost:
         adapter = OllamaAdapter()
         resp = MagicMock()
         resp.raise_for_status.side_effect = requests.HTTPError("500")
-        with patch("requests.post", return_value=resp):
-            with pytest.raises(ConnectionError):
-                adapter.complete("hi")
+        with patch("requests.post", return_value=resp), pytest.raises(ConnectionError):
+            adapter.complete("hi")
 
     def test_post_uses_correct_url(self) -> None:
         adapter = OllamaAdapter(base_url="http://myhost:1234")
