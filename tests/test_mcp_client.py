@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -8,7 +9,7 @@ import requests
 from src.mcp_client.client import MCPClient, MCPToolResult, _extract_text
 
 
-def _rpc_response(result: dict) -> MagicMock:
+def _rpc_response(result: dict[str, Any]) -> MagicMock:
     resp = MagicMock()
     resp.raise_for_status.return_value = None
     resp.json.return_value = {"jsonrpc": "2.0", "id": "test-id", "result": result}

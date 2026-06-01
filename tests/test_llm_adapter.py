@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -9,7 +10,7 @@ import requests
 from src.llm import LLMResponse, OllamaAdapter
 
 
-def _make_response(body: dict) -> MagicMock:
+def _make_response(body: dict[str, Any]) -> MagicMock:
     resp = MagicMock()
     resp.raise_for_status.return_value = None
     resp.json.return_value = body
