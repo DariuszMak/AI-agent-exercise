@@ -11,7 +11,7 @@ from src.rag.rewriter import RAGRewriter
 
 if TYPE_CHECKING:
     from src.llm import OllamaAdapter
-    from src.mcp_client.client import MCPClient
+    from src.mcp_client.mcp_client import MCPClient
     from src.rag.agentic_retriever import AgenticRetriever
 
 logger = logging.getLogger(__name__)

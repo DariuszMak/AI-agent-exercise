@@ -8,7 +8,7 @@ import pytest
 
 from src.agent.loop import AgentLoop, AgentResult
 from src.llm import LLMResponse
-from src.mcp_client.client import MCPClient, MCPToolResult
+from src.mcp_client.mcp_client import MCPClient, MCPToolResult
 from src.rag.agentic_retriever import AgenticRetriever
 from src.rag.evaluator import RAGEvaluator
 

@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from src.mcp_client.client import MCPClient, MCPToolResult, _extract_text
+from src.mcp_client.mcp_client import MCPClient, MCPToolResult, _extract_text
 
 
 def _rpc_response(result: dict[str, Any]) -> MagicMock:
