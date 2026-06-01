@@ -38,9 +38,11 @@ class TestMCPClientListTools:
 
     def test_list_tools_raises_on_connection_error(self) -> None:
         client = MCPClient(server_url="http://localhost:8765")
-        with patch("requests.post", side_effect=requests.ConnectionError("refused")):
-            with pytest.raises(ConnectionError, match="Serwer MCP niedostępny"):
-                client.list_tools()
+        with (
+            patch("requests.post", side_effect=requests.ConnectionError("refused")),
+            pytest.raises(ConnectionError, match="Serwer MCP niedostępny"),
+        ):
+            client.list_tools()
 
 
 class TestMCPClientCallTool:
@@ -99,9 +101,11 @@ class TestMCPClientCallTool:
 class TestMCPClientRpc:
     def test_rpc_raises_value_error_on_json_rpc_error(self) -> None:
         client = MCPClient(server_url="http://localhost:8765")
-        with patch("requests.post", return_value=_error_response(-32600, "invalid request")):
-            with pytest.raises(ValueError, match="-32600"):
-                client._rpc("tools/list", {})
+        with(
+            patch("requests.post", return_value=_error_response(-32600, "invalid request")),
+            pytest.raises(ValueError, match="-32600"),
+        ):
+            client._rpc("tools/list", {})
 
     def test_rpc_raises_connection_error_on_http_error(self) -> None:
         client = MCPClient(server_url="http://localhost:8765")

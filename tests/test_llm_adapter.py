@@ -96,17 +96,21 @@ class TestOllamaAdapterCompleteJson:
     def test_complete_json_raises_on_invalid_json(self) -> None:
         adapter = OllamaAdapter()
         body = {"message": {"content": "not json at all!!"}, "model": "x", "done": True}
-        with patch("requests.post", return_value=_make_response(body)):
-            with pytest.raises(ValueError, match="Niepoprawny JSON"):
-                adapter.complete_json("return json")
+        with(
+             patch("requests.post", return_value=_make_response(body)),
+             pytest.raises(ValueError, match="Niepoprawny JSON"),
+        ):
+            adapter.complete_json("return json")
 
 
 class TestOllamaAdapterPost:
     def test_post_raises_connection_error_on_request_exception(self) -> None:
         adapter = OllamaAdapter()
-        with patch("requests.post", side_effect=requests.ConnectionError("refused")):
-            with pytest.raises(ConnectionError, match="Ollama niedostępna"):
-                adapter.complete("hi")
+        with(
+            patch("requests.post", side_effect=requests.ConnectionError("refused")),
+            pytest.raises(ConnectionError, match="Ollama niedostępna"),
+        ):
+            adapter.complete("hi")
 
     def test_post_raises_on_non_dict_response(self) -> None:
         adapter = OllamaAdapter()
