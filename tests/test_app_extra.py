@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
@@ -9,8 +10,6 @@ import pytest
 from src.app import create_app
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from flask.testing import FlaskClient
 
 
@@ -29,7 +28,6 @@ def patched_client(tmp_path: Path):
         instance.encode.side_effect = _fake_embed
         mock_st.return_value = instance
         import src.rag.embeddings as emb
-
         emb._model = None
         app = create_app(docs)
     app.config["TESTING"] = True
@@ -45,7 +43,6 @@ def test_build_index_with_no_documents_returns_warning(tmp_path: Path) -> None:
         instance.encode.side_effect = _fake_embed
         mock_st.return_value = instance
         import src.rag.embeddings as emb
-
         emb._model = None
         app = create_app(empty_docs)
 
@@ -69,7 +66,6 @@ def test_build_index_with_documents(tmp_path: Path) -> None:
         instance.encode.side_effect = _fake_embed
         mock_st.return_value = instance
         import src.rag.embeddings as emb
-
         emb._model = None
         app = create_app(docs)
 
@@ -93,9 +89,24 @@ def test_ask_without_body_returns_400(patched_client: FlaskClient) -> None:
     assert response.status_code == 400
 
 
-def test_ask_missing_query_key_returns_400(patched_client: FlaskClient) -> None:
-    patched_client.post("/index")
-    response = patched_client.post("/ask", json={"wrong_key": "value"})
+def test_ask_missing_query_key_returns_400(tmp_path: Path) -> None:
+    docs = tmp_path / "documents"
+    docs.mkdir()
+    (docs / "a.txt").write_text("Test content for index.", encoding="utf-8")
+
+    with patch("src.rag.embeddings.SentenceTransformer") as mock_st:
+        instance = MagicMock()
+        instance.encode.side_effect = _fake_embed
+        mock_st.return_value = instance
+        import src.rag.embeddings as emb
+        emb._model = None
+        app = create_app(docs)
+
+    app.config["TESTING"] = True
+    client = app.test_client()
+    client.post("/index")
+
+    response = client.post("/ask", json={"wrong_key": "value"})
     assert response.status_code == 400
     assert response.get_json()["error"] == "invalid question"
 
@@ -112,7 +123,6 @@ def test_autoload_true_with_existing_files(tmp_path: Path) -> None:
         instance.encode.side_effect = _fake_embed
         mock_st.return_value = instance
         import src.rag.embeddings as emb
-
         emb._model = None
         app = create_app(docs, index_path=index_path, docstore_path=docstore_path, autoload=False)
         app.config["TESTING"] = True
@@ -143,7 +153,6 @@ def test_autoload_true_without_existing_files(tmp_path: Path) -> None:
         instance.encode.side_effect = _fake_embed
         mock_st.return_value = instance
         import src.rag.embeddings as emb
-
         emb._model = None
         app = create_app(docs, index_path=missing_index, docstore_path=missing_docstore, autoload=True)
 

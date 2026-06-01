@@ -83,7 +83,7 @@ class TestAgenticRetrieverSearch:
 
     def test_search_uses_faiss_search(self, ready_store: IndexStore) -> None:
         retriever = AgenticRetriever.from_index_store(ready_store)
-        with patch("src.rag.agentic_retriever.faiss_search") as mock_search:
+        with patch("src.rag.retriever.search") as mock_search:
             mock_search.return_value = [{"id": "x", "score": 0.9, "text": "t", "chunk_id": "0"}]
             results = retriever.search("q", k=1)
         mock_search.assert_called_once()
