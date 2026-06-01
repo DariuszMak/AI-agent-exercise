@@ -10,9 +10,9 @@ uv run pydeps src\server.py --noshow -T svg -o images\structure_runner_clustered
 uv run pydeps src\server.py --noshow -T svg -o images\structure_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
 uv run pydeps src\server.py --noshow -T svg -o images\structure_runner_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
 
-uv run pydeps src\agent_main.py --noshow -T svg -o images\structure_agent_runner_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
-uv run pydeps src\agent_main.py --noshow -T svg -o images\structure_agent_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
-uv run pydeps src\agent_main.py --noshow -T svg -o images\structure_agent_runner_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+uv run pydeps src\agent_runner.py --noshow -T svg -o images\structure_agent_runner_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps src\agent_runner.py --noshow -T svg -o images\structure_agent_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps src\agent_runner.py --noshow -T svg -o images\structure_agent_runner_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
 
 $files = Get-ChildItem "images" -Filter "*.svg"
 
