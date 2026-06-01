@@ -21,7 +21,7 @@ def _fake_embed(text: str) -> np.ndarray:
 
 
 @pytest.fixture()
-def patched_client(tmp_path: Path):
+def patched_client(tmp_path: Path) -> FlaskClient:
     docs = tmp_path / "documents"
     docs.mkdir()
     with patch("src.rag.embeddings.SentenceTransformer") as mock_st:
