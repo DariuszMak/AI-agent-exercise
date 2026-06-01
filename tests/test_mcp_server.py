@@ -146,7 +146,7 @@ class TestBuiltinTools:
         entry = json.loads(lines[0])
         assert entry["query"] == "test query"
         assert entry["iteration"] == 1
-        assert entry["score"] == 0.75
+        assert entry["score"] == pytest.approx(0.75)
 
     def test_log_query_appends_multiple_entries(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         import src.mcp_client.server as srv_module
@@ -170,7 +170,7 @@ class TestBuiltinTools:
 
         entry = json.loads(log_path.read_text(encoding="utf-8").strip())
         assert entry["iteration"] == 0
-        assert entry["score"] == 0.0
+        assert entry["score"] == pytest.approx(0.0)
 
     def test_fetch_external_context_ksef(self) -> None:
         result = fetch_external_context("ksef")
