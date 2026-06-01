@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from src.mcp_client.server import MCPServer, _error, fetch_external_context, log_query
+from src.mcp_client.mcp_server import MCPServer, _error, fetch_external_context, log_query
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -142,7 +142,7 @@ def test_tool_raises_type_error_on_bad_call() -> None:
 
 
 def test_log_query_creates_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import src.mcp_client.server as srv_module
+    import src.mcp_client.mcp_server as srv_module
 
     log_path = tmp_path / "query_log.jsonl"
     monkeypatch.setattr(srv_module, "_LOG_FILE", log_path)
@@ -160,7 +160,7 @@ def test_log_query_creates_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
 
 
 def test_log_query_appends_multiple_entries(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import src.mcp_client.server as srv_module
+    import src.mcp_client.mcp_server as srv_module
 
     log_path = tmp_path / "query_log.jsonl"
     monkeypatch.setattr(srv_module, "_LOG_FILE", log_path)
@@ -173,7 +173,7 @@ def test_log_query_appends_multiple_entries(tmp_path: Path, monkeypatch: pytest.
 
 
 def test_log_query_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    import src.mcp_client.server as srv_module
+    import src.mcp_client.mcp_server as srv_module
 
     log_path = tmp_path / "query_log.jsonl"
     monkeypatch.setattr(srv_module, "_LOG_FILE", log_path)
