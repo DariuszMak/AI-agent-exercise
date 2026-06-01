@@ -101,7 +101,7 @@ class TestMCPClientCallTool:
 class TestMCPClientRpc:
     def test_rpc_raises_value_error_on_json_rpc_error(self) -> None:
         client = MCPClient(server_url="http://localhost:8765")
-        with(
+        with (
             patch("requests.post", return_value=_error_response(-32600, "invalid request")),
             pytest.raises(ValueError, match="-32600"),
         ):
