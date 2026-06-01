@@ -39,53 +39,56 @@ def ready_store() -> IndexStore:
     return store
 
 
-class TestAgenticRetrieverFromIndexStore:
-    def test_from_ready_store(self, ready_store: IndexStore) -> None:
-        retriever = AgenticRetriever.from_index_store(ready_store)
-        assert isinstance(retriever, AgenticRetriever)
-
-    def test_from_empty_store_raises(self) -> None:
-        empty_store = IndexStore()
-        with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
-            AgenticRetriever.from_index_store(empty_store)
-
-    def test_from_store_with_no_documents_raises(self) -> None:
-        store = MagicMock()
-        store.ready = False
-
-        with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
-            AgenticRetriever.from_index_store(store)
+def test_from_ready_store(ready_store: IndexStore) -> None:
+    retriever = AgenticRetriever.from_index_store(ready_store)
+    assert isinstance(retriever, AgenticRetriever)
 
 
-class TestAgenticRetrieverSearch:
-    def test_search_returns_list(self, ready_store: IndexStore) -> None:
-        retriever = AgenticRetriever.from_index_store(ready_store)
-        with patch("src.rag.retriever.embed", side_effect=_fake_embed):
-            results = retriever.search("test query", k=2)
-        assert isinstance(results, list)
-        assert len(results) <= 2
+def test_from_empty_store_raises() -> None:
+    empty_store = IndexStore()
+    with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
+        AgenticRetriever.from_index_store(empty_store)
 
-    def test_search_results_have_required_keys(self, ready_store: IndexStore) -> None:
-        retriever = AgenticRetriever.from_index_store(ready_store)
-        with patch("src.rag.retriever.embed", side_effect=_fake_embed):
-            results = retriever.search("document query")
-        for r in results:
-            assert "text" in r
-            assert "score" in r
-            assert "id" in r
 
-    def test_search_respects_k_param(self, ready_store: IndexStore) -> None:
-        retriever = AgenticRetriever.from_index_store(ready_store)
-        with patch("src.rag.retriever.embed", side_effect=_fake_embed):
-            results_k1 = retriever.search("query", k=1)
-            results_k3 = retriever.search("query", k=3)
-        assert len(results_k1) == 1
-        assert len(results_k3) == 3
+def test_from_store_with_no_documents_raises() -> None:
+    store = MagicMock()
+    store.ready = False
 
-    def test_search_uses_faiss_search(self, ready_store: IndexStore) -> None:
-        retriever = AgenticRetriever.from_index_store(ready_store)
-        with patch("src.rag.retriever.search") as mock_search:
-            mock_search.return_value = [{"id": "x", "score": 0.9, "text": "t", "chunk_id": "0"}]
-            results = retriever.search("q", k=1)
-        mock_search.assert_called_once()
-        assert results[0]["id"] == "x"
+    with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
+        AgenticRetriever.from_index_store(store)
+
+
+def test_search_returns_list(ready_store: IndexStore) -> None:
+    retriever = AgenticRetriever.from_index_store(ready_store)
+    with patch("src.rag.retriever.embed", side_effect=_fake_embed):
+        results = retriever.search("test query", k=2)
+    assert isinstance(results, list)
+    assert len(results) <= 2
+
+
+def test_search_results_have_required_keys(ready_store: IndexStore) -> None:
+    retriever = AgenticRetriever.from_index_store(ready_store)
+    with patch("src.rag.retriever.embed", side_effect=_fake_embed):
+        results = retriever.search("document query")
+    for r in results:
+        assert "text" in r
+        assert "score" in r
+        assert "id" in r
+
+
+def test_search_respects_k_param(ready_store: IndexStore) -> None:
+    retriever = AgenticRetriever.from_index_store(ready_store)
+    with patch("src.rag.retriever.embed", side_effect=_fake_embed):
+        results_k1 = retriever.search("query", k=1)
+        results_k3 = retriever.search("query", k=3)
+    assert len(results_k1) == 1
+    assert len(results_k3) == 3
+
+
+def test_search_uses_faiss_search(ready_store: IndexStore) -> None:
+    retriever = AgenticRetriever.from_index_store(ready_store)
+    with patch("src.rag.retriever.search") as mock_search:
+        mock_search.return_value = [{"id": "x", "score": 0.9, "text": "t", "chunk_id": "0"}]
+        results = retriever.search("q", k=1)
+    mock_search.assert_called_once()
+    assert results[0]["id"] == "x"
