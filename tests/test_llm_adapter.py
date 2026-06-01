@@ -73,7 +73,7 @@ class TestOllamaAdapterComplete:
         with patch("requests.post", return_value=_make_response(body)) as mock_post:
             adapter.complete("q", temperature=0.7)
         payload = mock_post.call_args.kwargs["json"]
-        assert payload["options"]["temperature"] == 0.7
+        assert payload["options"]["temperature"] == pytest.approx(0.7)
 
 
 class TestOllamaAdapterCompleteJson:

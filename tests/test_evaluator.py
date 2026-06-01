@@ -10,7 +10,7 @@ class TestRAGEvaluatorEdgeCases:
         evaluator = RAGEvaluator()
         result = evaluator.evaluate("any query", [])
         assert result.passed is False
-        assert result.score == 0.0
+        assert result.score == pytest.approx(0.0)
         assert result.best_chunk == ""
 
     def test_below_min_results_fails(self) -> None:
@@ -18,7 +18,7 @@ class TestRAGEvaluatorEdgeCases:
         docs = [{"text": "some text", "score": 0.9}]
         result = evaluator.evaluate("query", docs)
         assert result.passed is False
-        assert result.score == 0.1
+        assert result.score == pytest.approx(0.1)
 
     def test_score_below_threshold_fails(self) -> None:
         evaluator = RAGEvaluator(relevance_threshold=0.5)
