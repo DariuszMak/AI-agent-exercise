@@ -52,7 +52,8 @@ class TestAgenticRetrieverFromIndexStore:
     def test_from_store_with_no_documents_raises(self) -> None:
         store = MagicMock()
         store.ready = False
-        with pytest.raises(ValueError):
+
+        with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
             AgenticRetriever.from_index_store(store)
 
 
