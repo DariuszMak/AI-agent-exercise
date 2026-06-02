@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests
 
-from src.llm import LLMResponse, OllamaAdapter
+from src.api.llm import LLMResponse, OllamaAdapter
 
 
 def _make_response(body: dict[str, Any]) -> MagicMock:

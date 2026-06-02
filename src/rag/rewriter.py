@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, cast
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from src.llm import OllamaAdapter
+    from src.api.llm import OllamaAdapter
 
 logger = logging.getLogger(__name__)
 

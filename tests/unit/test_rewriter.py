@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.llm import LLMResponse
+from src.api.llm import LLMResponse
 from src.rag.rewriter import RAGRewriter
 
 
