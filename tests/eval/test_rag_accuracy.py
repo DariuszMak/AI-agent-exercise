@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from src.app import create_app
+from src.api.app import create_app
 from tests.eval.ollama_judge import score_answer_relevancy, score_context_relevancy, score_faithfulness
 
 if TYPE_CHECKING:

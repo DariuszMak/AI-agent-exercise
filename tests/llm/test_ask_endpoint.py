@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from src.app import create_app
+from src.api.app import create_app
 
 if TYPE_CHECKING:
     from pathlib import Path
