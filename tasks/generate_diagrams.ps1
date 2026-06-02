@@ -6,9 +6,9 @@ uv run pydeps tests --noshow -T svg -o images\structure_tests_module_clustered.s
 uv run pydeps tests --noshow -T svg -o images\structure_tests_module.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
 uv run pydeps tests --noshow -T svg -o images\structure_tests_module_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
 
-uv run pydeps src\rag\api\server.py --noshow -T svg -o images\structure_runner_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
-uv run pydeps src\rag\api\server.py --noshow -T svg -o images\structure_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
-uv run pydeps src\rag\api\server.py --noshow -T svg -o images\structure_runner_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
+uv run pydeps src\rag\api\server.py --noshow -T svg -o images\structure_server_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
+uv run pydeps src\rag\api\server.py --noshow -T svg -o images\structure_server.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
+uv run pydeps src\rag\api\server.py --noshow -T svg -o images\structure_server_pylib.svg --max-bacon 2 --max-module-depth 100 --rankdir LR --pylib ; 
 
 uv run pydeps src\agent_runner.py --noshow -T svg -o images\structure_agent_runner_clustered.svg --max-bacon 100 --max-module-depth 100 --rankdir LR --cluster ; 
 uv run pydeps src\agent_runner.py --noshow -T svg -o images\structure_agent_runner.svg --max-bacon 2 --max-module-depth 100 --rankdir LR ; 
