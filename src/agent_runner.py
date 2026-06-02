@@ -19,7 +19,7 @@ MCP_SERVER_URL = "http://localhost:8765"
 
 def build_agent() -> Any:
     from src.agent.loop import AgentLoop
-    from src.api.llm import OllamaAdapter
+    from src.rag.api.llm import OllamaAdapter
     from src.mcp_client.mcp_client import MCPClient
     from src.rag.agentic_retriever import AgenticRetriever
     from src.rag.evaluator import RAGEvaluator

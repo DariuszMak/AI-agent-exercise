@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 
 from src.agent.loop import AgentLoop, AgentResult
-from src.api.llm import LLMResponse
+from src.rag.api.llm import LLMResponse
 from src.mcp_client.mcp_client import MCPClient, MCPToolResult
 from src.rag.agentic_retriever import AgenticRetriever
 from src.rag.evaluator import RAGEvaluator

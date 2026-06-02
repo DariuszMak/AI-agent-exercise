@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from src.api.app import create_app
+from src.rag.api.app import create_app
 
 if TYPE_CHECKING:
     from pathlib import Path
