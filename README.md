@@ -27,7 +27,7 @@ You can also use VSCode `settings.json` and `launch.json` files to run the proje
 ### Fast Windows dev
 
 ```commandline
-task full-dev-windows ; 
+task full-dev-native ; 
 ```
 
 ### Full analysis
