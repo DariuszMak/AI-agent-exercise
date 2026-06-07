@@ -20,11 +20,11 @@
 - [Task](https://taskfile.dev/docs/installation) runner
 - [Ollama](https://ollama.com/)
 
-## Local development (Windows PowerShell)
+## Local development (PowerShell)
 
 You can also use VSCode `settings.json` and `launch.json` files to run the project (choose interpreter created by UV).
 
-### Fast Windows dev
+### Fast native dev
 
 ```commandline
 task full-dev-native ; 
