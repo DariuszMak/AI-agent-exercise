@@ -10,9 +10,9 @@ from src.rag.evaluator import RAGEvaluator
 from src.rag.rewriter import RAGRewriter
 
 if TYPE_CHECKING:
-    from src.api.llm import OllamaAdapter
     from src.mcp_client.mcp_client import MCPClient
     from src.rag.agentic_retriever import AgenticRetriever
+    from src.rag.api.llm import OllamaAdapter
 
 logger = logging.getLogger(__name__)
 
