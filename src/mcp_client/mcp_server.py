@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import logging
 from collections.abc import Callable
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -9,6 +8,8 @@ from pathlib import Path
 from typing import Any, TypeVar, cast
 
 import structlog
+
+from src.helpers.logging_setup import logging_setup
 
 logger = structlog.get_logger(__name__)
 
@@ -226,5 +227,5 @@ def fetch_external_context(topic: str) -> str:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    logging_setup()
     server.run()
