@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import logging
+import structlog
+
 from dataclasses import dataclass
 from typing import Any
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 DEFAULT_RELEVANCE_THRESHOLD = 0.45
 DEFAULT_MIN_RESULTS = 1

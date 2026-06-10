@@ -1,13 +1,14 @@
 from __future__ import annotations
 
-import logging
+import structlog
+
 import os
 
 import numpy as np
 import pytest
 from sentence_transformers import SentenceTransformer
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 _MODEL_NAME = os.environ.get("EMBED_MODEL", "all-MiniLM-L6-v2")
 _model: SentenceTransformer | None = None

@@ -8,13 +8,15 @@ from typing import TYPE_CHECKING, Any, cast
 from src.agent.prompts import ANSWER_PROMPT, THINK_PROMPT
 from src.rag.evaluator import RAGEvaluator
 from src.rag.rewriter import RAGRewriter
+import structlog
+
 
 if TYPE_CHECKING:
     from src.mcp_client.mcp_client import MCPClient
     from src.rag.agentic_retriever import AgenticRetriever
     from src.rag.api.llm import OllamaAdapter
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 MAX_ITERATIONS = 3
 

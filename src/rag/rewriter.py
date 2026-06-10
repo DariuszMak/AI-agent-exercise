@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-import logging
+import structlog
+
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
@@ -8,7 +9,7 @@ if TYPE_CHECKING:
 
     from src.rag.api.llm import OllamaAdapter
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 _REWRITE_PROMPT = """\
 Jesteś ekspertem od wyszukiwania informacji.

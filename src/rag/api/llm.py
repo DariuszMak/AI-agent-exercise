@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import json
-import logging
+import structlog
+
 from dataclasses import dataclass
 from typing import Any, cast
 from urllib.parse import urlparse
 
 import requests
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 OLLAMA_BASE_URL = "http://localhost:11434"
 DEFAULT_MODEL = "gemma:2b"

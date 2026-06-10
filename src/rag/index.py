@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import json
-import logging
+import structlog
+
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
@@ -13,7 +14,7 @@ from src.rag.embeddings import embed
 if TYPE_CHECKING:
     from pathlib import Path
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 DIM = 384
 

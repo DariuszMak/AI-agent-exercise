@@ -7,8 +7,10 @@ from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any, TypeVar, cast
+import structlog
 
-logger = logging.getLogger(__name__)
+
+logger = structlog.get_logger(__name__)
 
 _LOG_FILE = Path("storage/query_log.jsonl")
 

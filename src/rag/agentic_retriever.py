@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING, Any
+import structlog
+
 
 if TYPE_CHECKING:
     import faiss
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 class AgenticRetriever:

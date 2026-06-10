@@ -4,13 +4,13 @@ import logging
 import sys
 from pathlib import Path
 from typing import Any
+import structlog
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
-    datefmt="%H:%M:%S",
-)
-logger = logging.getLogger(__name__)
+from src.helpers.logging_setup import logging_setup
+
+logging_setup()
+
+logger = structlog.get_logger(__name__)
 
 INDEX_PATH = Path("storage/index.faiss")
 DOCSTORE_PATH = Path("storage/documents/EN.json")
