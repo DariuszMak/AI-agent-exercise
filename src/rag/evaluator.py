@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import structlog
-
 from dataclasses import dataclass
 from typing import Any
+
+import structlog
 
 logger = structlog.get_logger(__name__)
 

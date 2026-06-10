@@ -7,8 +7,8 @@ from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any, TypeVar, cast
-import structlog
 
+import structlog
 
 logger = structlog.get_logger(__name__)
 

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import logging
 import sys
 from pathlib import Path
 from typing import Any
+
 import structlog
 
 from src.helpers.logging_setup import logging_setup

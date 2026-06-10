@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import structlog
-
 from typing import TYPE_CHECKING, cast
+
+import structlog
 
 if TYPE_CHECKING:
     from collections.abc import Callable

@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import json
-import structlog
-
 from dataclasses import dataclass
 from typing import Any, cast
 from urllib.parse import urlparse
 
 import requests
+import structlog
 
 logger = structlog.get_logger(__name__)
 

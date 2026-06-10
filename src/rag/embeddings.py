@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import structlog
-
 import os
 
 import numpy as np
 import pytest
+import structlog
 from sentence_transformers import SentenceTransformer
 
 logger = structlog.get_logger(__name__)

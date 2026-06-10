@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import logging
 import uuid
 from dataclasses import dataclass, field
 from typing import Any, cast
 
 import requests
 import structlog
-
 
 logger = structlog.get_logger(__name__)
 

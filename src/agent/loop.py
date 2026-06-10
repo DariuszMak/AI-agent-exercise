@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 import contextlib
-import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, cast
+
+import structlog
 
 from src.agent.prompts import ANSWER_PROMPT, THINK_PROMPT
 from src.rag.evaluator import RAGEvaluator
 from src.rag.rewriter import RAGRewriter
-import structlog
-
 
 if TYPE_CHECKING:
     from src.mcp_client.mcp_client import MCPClient

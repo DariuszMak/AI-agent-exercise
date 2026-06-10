@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import json
-import structlog
-
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 import faiss
 import numpy as np
+import structlog
 
 from src.rag.embeddings import embed
 
