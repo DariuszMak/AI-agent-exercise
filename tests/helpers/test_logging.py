@@ -10,8 +10,10 @@ if TYPE_CHECKING:
     from collections.abc import Generator
     from pathlib import Path
 
+pytestmark = pytest.mark.usefixtures("reset_logging")
 
-@pytest.fixture(autouse=True)
+
+@pytest.fixture
 def reset_logging() -> Generator[None]:
     logger = logging.getLogger()
     logger.handlers.clear()
