@@ -77,7 +77,7 @@ def test_tools_call_missing_required_arg(server: MCPServer) -> None:
     }
     resp = server._dispatch(req)
     assert resp["result"]["isError"] is True
-    assert "Lack of elements" in resp["result"]["content"][0]["text"]
+    assert "No data" in resp["result"]["content"][0]["text"]
 
 
 def test_unknown_method_returns_error(server: MCPServer) -> None:
