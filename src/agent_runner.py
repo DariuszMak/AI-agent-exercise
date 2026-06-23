@@ -26,7 +26,7 @@ def build_agent() -> Any:
     from src.rag.index import IndexStore
     from src.rag.rewriter import RAGRewriter
 
-    logger.info("Ładuję indeks FAISS z %s", INDEX_PATH)
+    logger.info("Load FAISS indexes from %s", INDEX_PATH)
     store = IndexStore.load(INDEX_PATH, DOCSTORE_PATH)
     retriever = AgenticRetriever.from_index_store(store)
 
@@ -37,9 +37,9 @@ def build_agent() -> Any:
         candidate = MCPClient(server_url=MCP_SERVER_URL)
         candidate.list_tools()
         mcp = candidate
-        logger.info("Serwer MCP dostępny pod %s", MCP_SERVER_URL)
+        logger.info("Server MCP available: %s", MCP_SERVER_URL)
     except ConnectionError:
-        logger.warning("Serwer MCP niedostępny — agent działa bez narzędzi zewnętrznych")
+        logger.warning("Server MCP unavailable — agent works without external tools")
 
     evaluator = RAGEvaluator(relevance_threshold=0.20)
     rewriter = RAGRewriter(llm=llm)
@@ -55,16 +55,16 @@ def build_agent() -> Any:
 
 
 def main() -> None:
-    query = " ".join(sys.argv[1:]) or "Co to jest KSeF?"
-    logger.info("Pytanie: %r", query)
+    query = " ".join(sys.argv[1:]) or "What is Empire State Building?"
+    logger.info("Query: %r", query)
 
     agent = build_agent()
     result = agent.run(query)
 
     logger.info("=" * 60)
-    logger.info("ODPOWIEDŹ: %s", result.answer)
+    logger.info("Answer: %s", result.answer)
     logger.info("=" * 60)
-    logger.info("Iteracje: %d | Score: %.3f", result.total_iterations, result.final_score)
+    logger.info("Iterations: %d | Score: %.3f", result.total_iterations, result.final_score)
 
     for step in result.steps:
         status = "OK" if step.rag_passed else "XX"
