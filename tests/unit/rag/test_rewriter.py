@@ -36,7 +36,9 @@ def test_rewrite_falls_back_on_connection_error() -> None:
     llm = MagicMock()
     llm.complete.side_effect = ConnectionError("Ollama down")
     rewriter = RAGRewriter(llm=llm)
-    result = rewriter.rewrite("What is Empire State Building?", "empire_state_building query", "no results", iteration=1)
+    result = rewriter.rewrite(
+        "What is Empire State Building?", "empire_state_building query", "no results", iteration=1
+    )
     assert isinstance(result, str)
     assert len(result) > 0
 

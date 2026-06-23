@@ -37,7 +37,9 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
 @pytest.fixture()
 def mock_llm() -> MagicMock:
     llm = MagicMock()
-    llm.complete.return_value = LLMResponse(content="Empire State Building is a skyscraper in Manhattan, New York City.", model="gemma:2b", done=True)
+    llm.complete.return_value = LLMResponse(
+        content="Empire State Building is a skyscraper in Manhattan, New York City.", model="gemma:2b", done=True
+    )
     llm.complete_json.return_value = {
         "needs_external_tool": False,
         "tool_name": None,
@@ -148,10 +150,7 @@ def test_agent_calls_mcp_tool_when_llm_requests(
 
     result = agent.run("What is Empire State Building?")
 
-    fetch_calls = [
-        call for call in mock_mcp.call_tool.call_args_list
-        if call.args[0] == "fetch_external_context"
-    ]
+    fetch_calls = [call for call in mock_mcp.call_tool.call_args_list if call.args[0] == "fetch_external_context"]
     assert len(fetch_calls) == 1
     assert result.steps[0].tool_called == "fetch_external_context"
 

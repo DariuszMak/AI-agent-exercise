@@ -112,10 +112,6 @@ def _extract_text(content: list[dict[str, Any]] | Any) -> str:
     if not isinstance(content, list):
         return str(content)
 
-    texts = [
-        block.get("text", "")
-        for block in content
-        if isinstance(block, dict) and block.get("type") == "text"
-    ]
+    texts = [block.get("text", "") for block in content if isinstance(block, dict) and block.get("type") == "text"]
 
     return "\n".join(texts)

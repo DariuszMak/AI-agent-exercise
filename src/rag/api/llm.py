@@ -65,9 +65,7 @@ class OllamaAdapter:
         )
 
     def complete_json(self, prompt: str) -> Any:
-        json_prompt = (
-            f"{prompt}\n\nRespond ONLY with valid JSON, without any extra text or code blocks."
-        )
+        json_prompt = f"{prompt}\n\nRespond ONLY with valid JSON, without any extra text or code blocks."
 
         response = self.complete(
             json_prompt,

@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 def test_load_documents_returns_chunks(tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir()
-    (docs / "empire_state_building.txt").write_text("Empire State Building is a skyscraper in Manhattan.", encoding="utf-8")
+    (docs / "empire_state_building.txt").write_text(
+        "Empire State Building is a skyscraper in Manhattan.", encoding="utf-8"
+    )
 
     documents = load_documents(docs)
 

@@ -57,10 +57,7 @@ class RAGEvaluator:
             return EvaluationResult(
                 score=best_score,
                 passed=False,
-                reason=(
-                    f"Highest similarity score ({best_score:.3f}) "
-                    f"below threshold ({self._threshold:.3f})"
-                ),
+                reason=(f"Highest similarity score ({best_score:.3f}) below threshold ({self._threshold:.3f})"),
                 best_chunk=best_text,
             )
 
