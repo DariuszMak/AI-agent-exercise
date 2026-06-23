@@ -30,7 +30,8 @@ def test_empire_state_building_semantic(client: FlaskClient, tmp_path: Path) -> 
     docs.mkdir(parents=True, exist_ok=True)
 
     (docs / "empire_state_building.txt").write_text(
-        "Empire State Building is a 102-story Art Deco skyscraper in Manhattan, New York City, and one of the world's most famous landmarks and observation towers.",
+        "Empire State Building is a 102-story Art Deco skyscraper in Manhattan, New York City, and one of "
+        "the world's most famous landmarks and observation towers.",
         encoding="utf-8",
     )
 
