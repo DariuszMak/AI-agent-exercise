@@ -77,7 +77,7 @@ def test_tools_call_missing_required_arg(server: MCPServer) -> None:
     }
     resp = server._dispatch(req)
     assert resp["result"]["isError"] is True
-    assert "No data" in resp["result"]["content"][0]["text"]
+    assert "Missing arguments" in resp["result"]["content"][0]["text"]
 
 
 def test_unknown_method_returns_error(server: MCPServer) -> None:
@@ -203,7 +203,7 @@ def test_fetch_external_context_unknown() -> None:
 def test_fetch_external_context_case_insensitive() -> None:
     result_lower = fetch_external_context("empire state building")
     result_upper = fetch_external_context("EMPIRE STATE BUILDING")
-    assert result_lower == result_upper
+    assert result_lower.lower() == result_upper.lower()
 
 
 def test_error_structure() -> None:

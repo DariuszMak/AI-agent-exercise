@@ -128,7 +128,7 @@ def test_post_raises_on_non_dict_response() -> None:
 
 def test_post_raises_on_invalid_scheme() -> None:
     adapter = OllamaAdapter(base_url="ftp://evil.example.com")
-    with pytest.raises(ValueError, match="Wrong URL schema"):
+    with pytest.raises(ValueError, match="Unsupported URL scheme"):
         adapter.complete("hi")
 
 

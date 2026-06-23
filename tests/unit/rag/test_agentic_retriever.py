@@ -46,7 +46,7 @@ def test_from_ready_store(ready_store: IndexStore) -> None:
 
 def test_from_empty_store_raises() -> None:
     empty_store = IndexStore()
-    with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
+    with pytest.raises(ValueError, match="IndexStore is not ready"):
         AgenticRetriever.from_index_store(empty_store)
 
 
@@ -54,7 +54,7 @@ def test_from_store_with_no_documents_raises() -> None:
     store = MagicMock()
     store.ready = False
 
-    with pytest.raises(ValueError, match="IndexStore nie jest gotowy"):
+    with pytest.raises(ValueError, match="IndexStore is not ready"):
         AgenticRetriever.from_index_store(store)
 
 
