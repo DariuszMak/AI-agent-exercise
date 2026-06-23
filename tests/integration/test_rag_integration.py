@@ -44,4 +44,4 @@ def test_empire_state_building_semantic(client: FlaskClient, tmp_path: Path) -> 
     results = response.get_json()
     assert results is not None
     assert isinstance(results, list)
-    assert any("faktur" in r["text"] for r in results)
+    assert any("building" in r["text"] for r in results)

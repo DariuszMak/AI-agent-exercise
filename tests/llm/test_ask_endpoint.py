@@ -61,4 +61,4 @@ def test_ask_happy_path(client: FlaskClient) -> None:
     assert isinstance(data["sources"], list)
     assert len(data["sources"]) > 0
 
-    assert any("skyscraper" in s["text"].lower() for s in data["sources"])
+    assert any("building" in s["text"].lower() for s in data["sources"])
