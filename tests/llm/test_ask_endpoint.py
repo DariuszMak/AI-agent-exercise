@@ -38,14 +38,14 @@ def test_ask_without_index(client: FlaskClient) -> None:
 
 
 @pytest.mark.slow
-def test_ask_happy_path_polish(client: FlaskClient) -> None:
+def test_ask_happy_path(client: FlaskClient) -> None:
     response = client.post("/index")
     assert response.status_code == 200
     assert response.get_json()["indexed"] > 0
 
     response = client.post(
         "/ask",
-        json={"query": "Do czego służy KSeF?"},
+        json={"query": "What is Empire State Building?"},
     )
 
     assert response.status_code == 200
@@ -61,4 +61,4 @@ def test_ask_happy_path_polish(client: FlaskClient) -> None:
     assert isinstance(data["sources"], list)
     assert len(data["sources"]) > 0
 
-    assert any("faktur" in s["text"].lower() for s in data["sources"])
+    assert any("skyscraper" in s["text"].lower() for s in data["sources"])

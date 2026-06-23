@@ -25,7 +25,7 @@ def test_index_and_query(client: FlaskClient, tmp_path: Path) -> None:
 
 
 @pytest.mark.slow
-def test_empire_state_building_semantic_english(client: FlaskClient, tmp_path: Path) -> None:
+def test_empire_state_building_semantic(client: FlaskClient, tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir(parents=True, exist_ok=True)
 
