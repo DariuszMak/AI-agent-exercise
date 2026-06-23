@@ -16,7 +16,7 @@ def app_with_docs(tmp_path: Path) -> Flask:
     docs = tmp_path / "documents"
     docs.mkdir()
 
-    (docs / "ksef.txt").write_text(
+    (docs / "empire_state_building.txt").write_text(
         "KSeF umożliwia wystawianie i odbieranie faktur ustrukturyzowanych w Polsce.",
         encoding="utf-8",
     )

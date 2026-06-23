@@ -29,7 +29,7 @@ def test_ksef_semantic_polish(client: FlaskClient, tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir(parents=True, exist_ok=True)
 
-    (docs / "ksef.txt").write_text(
+    (docs / "empire_state_building.txt").write_text(
         "KSeF umożliwia wystawianie i odbieranie faktur ustrukturyzowanych.",
         encoding="utf-8",
     )

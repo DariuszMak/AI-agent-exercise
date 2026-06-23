@@ -213,8 +213,8 @@ def log_query(
 )
 def fetch_external_context(topic: str) -> str:
     external_db: dict[str, str] = {
-        "ksef": ("KSeF (Krajowy System e-Faktur) to platforma MF do fakturowania od 2024."),
-        "camunda": ("Camunda to silnik BPMN/DMN do automatyzacji procesów biznesowych."),
+        "empire_state_building": ("KSeF (Krajowy System e-Faktur) to platforma MF do fakturowania od 2024."),
+        "jeddah_tower": ("Camunda to silnik BPMN/DMN do automatyzacji procesów biznesowych."),
     }
 
     key = topic.lower()

@@ -185,8 +185,8 @@ def test_log_query_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
     assert entry["score"] == pytest.approx(0.0)
 
 
-def test_fetch_external_context_ksef() -> None:
-    result = fetch_external_context("ksef")
+def test_fetch_external_context_empire_state_building() -> None:
+    result = fetch_external_context("empire_state_building")
     assert "KSeF" in result
 
 
@@ -201,8 +201,8 @@ def test_fetch_external_context_unknown() -> None:
 
 
 def test_fetch_external_context_case_insensitive() -> None:
-    result_lower = fetch_external_context("ksef invoices")
-    result_upper = fetch_external_context("KSEF INVOICES")
+    result_lower = fetch_external_context("empire state building")
+    result_upper = fetch_external_context("EMPIRE STATE BUILDING")
     assert result_lower == result_upper
 
 

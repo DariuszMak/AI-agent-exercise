@@ -36,7 +36,7 @@ def test_rewrite_falls_back_on_connection_error() -> None:
     llm = MagicMock()
     llm.complete.side_effect = ConnectionError("Ollama down")
     rewriter = RAGRewriter(llm=llm)
-    result = rewriter.rewrite("What is KSeF?", "ksef query", "no results", iteration=1)
+    result = rewriter.rewrite("What is Empire State Building?", "empire_state_building query", "no results", iteration=1)
     assert isinstance(result, str)
     assert len(result) > 0
 
@@ -68,14 +68,14 @@ def test_no_llm_uses_heuristic() -> None:
 
 def test_iteration_1_lowercases() -> None:
     rewriter = RAGRewriter(llm=None)
-    result = rewriter._rewrite_heuristic("What Is KSeF?", 1)
-    assert result == "what is ksef?"
+    result = rewriter._rewrite_heuristic("What Is Empire State Building?", 1)
+    assert result == "what is empire state building?"
 
 
 def test_iteration_2_deduplicates_words() -> None:
     rewriter = RAGRewriter(llm=None)
-    result = rewriter._rewrite_heuristic("ksef ksef system", 2)
-    assert result == "ksef system"
+    result = rewriter._rewrite_heuristic("Empire State Building building", 2)
+    assert result == "empire state building building"
 
 
 def test_iteration_3_appends_definicja() -> None:
