@@ -17,10 +17,10 @@ def test_chunk_has_metadata() -> None:
 
 
 def test_single_short_text_is_one_chunk() -> None:
-    text = "KSeF to system do faktur."
+    text = "Empire State Building is a skyscraper in Manhattan."
     chunks = list(chunk_text(text, chunk_tokens=256, overlap_tokens=32))
     assert len(chunks) == 1
-    assert "KSeF" in chunks[0].text
+    assert "Empire State Building" in chunks[0].text
 
 
 def test_long_text_produces_multiple_chunks() -> None:

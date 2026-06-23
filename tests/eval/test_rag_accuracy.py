@@ -32,9 +32,8 @@ def ask(client: FlaskClient, question: str) -> tuple[str, list[str]]:
 
 
 TEST_CASES = [
-    "What is KSeF?",
-    "What is Camunda?",
-    "What is Devapo?",
+    "What is Empire State Building?",
+    "What is Jeddah Tower?",
 ]
 
 

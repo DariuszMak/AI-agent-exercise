@@ -22,7 +22,7 @@ def sample_docs() -> list[dict[str, Any]]:
         {
             "id": "a.txt",
             "chunk_id": "0",
-            "text": "KSeF is an invoicing system.",
+            "text": "Empire State Building is a skyscraper in Manhattan.",
             "token_count": 6,
             "char_start": 0,
             "char_end": 28,
@@ -30,7 +30,7 @@ def sample_docs() -> list[dict[str, Any]]:
         {
             "id": "a.txt",
             "chunk_id": "1",
-            "text": "It is used in Poland.",
+            "text": "It is located in America.",
             "token_count": 5,
             "char_start": 29,
             "char_end": 50,

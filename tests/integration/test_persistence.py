@@ -26,7 +26,7 @@ def _patch_embed() -> Any:
 def test_index_persistence(tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir()
-    (docs / "a.txt").write_text("KSeF to system do faktur.", encoding="utf-8")
+    (docs / "a.txt").write_text("Empire State Building is a skyscraper in Manhattan, New York City.", encoding="utf-8")
 
     index_path = tmp_path / "index.faiss"
     docstore_path = tmp_path / "documents.json"
@@ -62,10 +62,10 @@ def test_index_persistence(tmp_path: Path) -> None:
         app2.config["TESTING"] = True
         client2 = app2.test_client()
 
-        response = client2.post("/query", json={"query": "Czym jest KSeF?"})
+        response = client2.post("/query", json={"query": "What is Empire State Building?"})
         assert response.status_code == 200
 
     results = response.get_json()
     assert results is not None
     assert len(results) > 0
-    assert "KSeF" in results[0]["text"]
+    assert "skyscraper" in results[0]["text"]

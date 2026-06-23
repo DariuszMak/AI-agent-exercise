@@ -214,10 +214,10 @@ def log_query(
 def fetch_external_context(topic: str) -> str:
     external_db: dict[str, str] = {
         "empire_state_building": (
-            "KSeF (National e-Invoicing System) is the Ministry of Finance's e-invoicing platform introduced in 2024."
+            "Empire State Building is a 102-story Art Deco skyscraper in Manhattan, New York City, and one of the world's most famous landmarks and observation towers."
         ),
         "jeddah_tower": (
-            "Camunda is a BPMN/DMN workflow engine used for business process automation."
+            "Jeddah Tower is a supertall skyscraper under construction in Saudi Arabia, designed to become the world’s tallest building once completed."
         ),
     }
 

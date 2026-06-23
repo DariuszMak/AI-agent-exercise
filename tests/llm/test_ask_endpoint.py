@@ -17,7 +17,7 @@ def app_with_docs(tmp_path: Path) -> Flask:
     docs.mkdir()
 
     (docs / "empire_state_building.txt").write_text(
-        "KSeF enables issuing and receiving structured invoices in Poland.",
+        "Empire State Building is a skyscraper in Manhattan, New York City.",
         encoding="utf-8",
     )
 
@@ -32,7 +32,7 @@ def client(app_with_docs: Flask) -> Any:
 
 
 def test_ask_without_index(client: FlaskClient) -> None:
-    response = client.post("/ask", json={"query": "What is KSeF used for?"})
+    response = client.post("/ask", json={"query": "How tall is Empire State Building?"})
     assert response.status_code == 400
     assert response.get_json()["error"] == "index not built"
 

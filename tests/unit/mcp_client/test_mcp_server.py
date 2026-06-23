@@ -187,7 +187,7 @@ def test_log_query_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> 
 
 def test_fetch_external_context_empire_state_building() -> None:
     result = fetch_external_context("empire_state_building")
-    assert "KSeF" in result
+    assert "Empire State Building" in result
 
 
 def test_fetch_external_context_camunda() -> None:

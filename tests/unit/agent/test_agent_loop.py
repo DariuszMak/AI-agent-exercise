@@ -24,7 +24,7 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
         {
             "id": f"doc_{i}.txt",
             "chunk_id": str(i),
-            "text": f"KSeF is system invoice number {i}. It enables issuing invoices.",
+            "text": f"Empire State Building document {i}. It is one of the world's most famous landmarks.",
             "score": 0.85,
             "token_count": 12,
             "char_start": 0,
@@ -37,7 +37,7 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
 @pytest.fixture()
 def mock_llm() -> MagicMock:
     llm = MagicMock()
-    llm.complete.return_value = LLMResponse(content="KSeF is the National e-Invoicing System.", model="gemma:2b", done=True)
+    llm.complete.return_value = LLMResponse(content="Empire State Building is a skyscraper in Manhattan, New York City.", model="gemma:2b", done=True)
     llm.complete_json.return_value = {
         "needs_external_tool": False,
         "tool_name": None,
@@ -79,7 +79,7 @@ def test_agent_returns_answer_on_good_rag(
         max_iterations=3,
     )
 
-    result = agent.run("What is KSeF?")
+    result = agent.run("What is Empire State Building?")
 
     assert isinstance(result, AgentResult)
     assert len(result.answer) > 0
@@ -114,7 +114,7 @@ def test_agent_retries_on_low_score(
         max_iterations=3,
     )
 
-    result = agent.run("What is KSeF?")
+    result = agent.run("What is Empire State Building?")
 
     assert result.total_iterations == 3
     assert retriever.search.call_count == 3
@@ -128,12 +128,12 @@ def test_agent_calls_mcp_tool_when_llm_requests(
     mock_llm.complete_json.return_value = {
         "needs_external_tool": True,
         "tool_name": "fetch_external_context",
-        "tool_arguments": {"topic": "KSeF"},
+        "tool_arguments": {"topic": "Empire State Building"},
         "reasoning": "needs external data",
     }
     mock_mcp.call_tool.return_value = MCPToolResult(
         tool_name="fetch_external_context",
-        content="KSeF has been active since 2024.",
+        content="Empire State Building has been active since 2024.",
         is_error=False,
     )
 
@@ -146,7 +146,7 @@ def test_agent_calls_mcp_tool_when_llm_requests(
         max_iterations=1,
     )
 
-    result = agent.run("What is KSeF?")
+    result = agent.run("What is Empire State Building?")
 
     fetch_calls = [
         call for call in mock_mcp.call_tool.call_args_list
@@ -172,7 +172,7 @@ def test_agent_handles_mcp_unavailable(
         max_iterations=1,
     )
 
-    result = agent.run("What is KSeF?")
+    result = agent.run("What is Empire State Building?")
 
     assert isinstance(result, AgentResult)
     assert len(result.answer) > 0

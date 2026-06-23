@@ -62,7 +62,7 @@ def test_build_index_with_no_documents_returns_warning(tmp_path: Path) -> None:
 def test_build_index_with_documents(tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir()
-    (docs / "test.txt").write_text("KSeF is an invoicing system used in Poland.", encoding="utf-8")
+    (docs / "test.txt").write_text("Empire State Building is a skyscraper in Manhattan.", encoding="utf-8")
 
     with patch("src.rag.embeddings.SentenceTransformer") as mock_st:
         instance = MagicMock()

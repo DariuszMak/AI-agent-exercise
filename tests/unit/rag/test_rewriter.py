@@ -80,14 +80,14 @@ def test_iteration_2_deduplicates_words() -> None:
 
 def test_iteration_3_appends_definicja() -> None:
     rewriter = RAGRewriter(llm=None)
-    result = rewriter._rewrite_heuristic("KSeF", 3)
-    assert result == "KSeF definicja"
+    result = rewriter._rewrite_heuristic("Empire State Building", 3)
+    assert result == "Empire State Building definition"
 
 
 def test_iteration_4_takes_first_word() -> None:
     rewriter = RAGRewriter(llm=None)
-    result = rewriter._rewrite_heuristic("KSeF system invoices", 4)
-    assert result == "KSeF"
+    result = rewriter._rewrite_heuristic("Empire State Building skyscraper", 4)
+    assert result == "Empire State Building"
 
 
 def test_iteration_4_empty_query_returns_empty() -> None:
@@ -98,8 +98,8 @@ def test_iteration_4_empty_query_returns_empty() -> None:
 
 def test_iteration_cycles_back() -> None:
     rewriter = RAGRewriter(llm=None)
-    result_iter1 = rewriter._rewrite_heuristic("What Is KSeF?", 1)
-    result_iter5 = rewriter._rewrite_heuristic("What Is KSeF?", 5)
+    result_iter1 = rewriter._rewrite_heuristic("What Is Empire State Building?", 1)
+    result_iter5 = rewriter._rewrite_heuristic("What Is Empire State Building?", 5)
     assert result_iter1 == result_iter5
 
 

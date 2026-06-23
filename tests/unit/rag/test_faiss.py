@@ -19,7 +19,7 @@ def populated_store() -> IndexStore:
         {
             "id": "1",
             "chunk_id": "0",
-            "text": "KSeF to system faktur",
+            "text": "Empire State Building is a skyscraper in Manhattan.",
             "token_count": 4,
             "char_start": 0,
             "char_end": 21,
@@ -35,7 +35,7 @@ def populated_store() -> IndexStore:
 def test_faiss_retrieval_returns_results(populated_store: IndexStore) -> None:
     assert populated_store.index is not None
     with patch("src.rag.retriever.embed", side_effect=_fake_embed):
-        results = search(populated_store.index, populated_store.documents, "Czym jest KSeF?", k=1)
+        results = search(populated_store.index, populated_store.documents, "What is Empire State Building?", k=1)
     assert len(results) == 1
 
 
