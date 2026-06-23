@@ -12,8 +12,6 @@ The focal point of the development and Jeddah Tower's primary use will be to hou
 
 Construction history
 
-[edit]
-
 In May 2008, soil testing in the area cast doubt over whether the proposed location could support a skyscraper of the proposed one-mile (1,600 metres, 5,250 ft) height, and MEED reported that the project had been scaled back, making it "up to 500 metres (1,640 ft) shorter".[21] Work on the foundation was scheduled to begin towards the end of 2012.[22] Statements that construction would soon begin were made starting in 2008. In August 2011, the start of construction was slated as "no later than December".[23] This meant the tower was expected to be completed in 2017, though at that time it was also possible that it could still have been completed by the date the media continued to publish, which was the prior estimate of late 2016.[24] Only if construction had begun promptly and gone smoothly could completion in late 2016 have been achieved.[16]
 
 Reports in 2009 suggested that the project had been put on hold due to the 2008 financial crisis and that Bechtel (the initial engineering firm for this project) was "in the process of ending its involvement with the project".[25][26] Kingdom Holding Company quickly criticized the news reports, insisting that the project had not been shelved.[27]
@@ -30,8 +28,6 @@ On 2 August 2011, it was publicly announced by Kingdom Holding, the investment c
 
 Contractors selected
 
-[edit]
-
 In early August 2011, the Saudi Binladin Group was chosen as the main construction contractor with the signing of an SR4.6billion (US$1.23 billion) contract,[50] which is less than it cost to build the Burj Khalifa (US$1.5billion).[51] New renderings were revealed, and on 2 August it was widely reported that the project was a go at the 1,000-metre (3,300 ft) height[A] with a building area of 530,000 square metres (5,704,873 ft2),[B][52][53] and will take 63 months to complete.[54] The announcement of the main construction contract signing caused Kingdom Holding Company's stock to jump 3.2% in one day,[55] in addition to KHC already having reported a 21% rise in second-quarter net profit.[56] Gordon Gill and Adrian Smith were also confirmed as the architect.[57] The landscaping contract for the Jeddah Tower was awarded to Landtech Designs, a US-based company, which was tasked with irrigating 3.4 hectares (8.5 acres) of green space, to be collected through rainwater.[58][59]
 
 Financing for the Jeddah Tower was complete by September 2012; Talal Al Maiman, chief executive officer and managing director of Kingdom Real Estate Development Co., said it had taken 20 months to gather all the investors.[60] The next month, Kingdom Holding awarded contracts totalling $98 million, and Subul Development Company paid $66.5 million for some land on the site. The Kingdom Riyadh Land project, a mixed-use commercial and residential development, will generate more than $5.33 billion of total investment and will house up to 75,000 people. The final master plan contract was awarded to Omrania & Associates and Barton Willmore.[61] Bauer, a German Foundations equipment manufacturer and contractor, was awarded a $32 million contract to support the initial phases of construction of the Jeddah Tower, including the installation of 270 bored piles measuring 1.5 and 1.8 metres (4 ft 11 in and 5 ft 11 in) in diameter.[62]
@@ -39,8 +35,6 @@ Financing for the Jeddah Tower was complete by September 2012; Talal Al Maiman, 
 The Jeddah Economic Company (JEC) appointed the joint venture of EC Harris and Mace to manage the project in early 2013.[63][64] The Saudi Water Company also signed a 2.2 billion-riyal ($587 million), 25-year deal with JEC to supply 156,000 cubic metres (5,500,000 cu ft)of treated and drinking water per day.[65]
 
 Construction begins and delays
-
-[edit]
 
 Construction started on 1 April 2013.[66][67] The pilings were completed that December,[68] allowing above-ground construction to commence in September 2014.[69]
 
@@ -82,8 +76,6 @@ Lessons from Burj Khalifa informed Jeddah Tower's structural design and planning
 ESD provides mechanical, plumbing, electrical, and fire protection engineering,[10] as well as teledata, audio/visual, security, and acoustics systems.[85] Langan International handles geotechnical engineering and some ground-level site work including transportation engineering and parking,[4] including the proposed 3,000–4,700 car underground garage near the tower.[102][32]
 
 Vertical transportation
-
-[edit]
 
 The elevator system will be located within the central structural core of the tower and will comprise approximately 8.025 kilometres of elevator hoistways. It will include 57 elevators, including 7 double-deck units, and 8 escalators, all supplied by the Finnish company Kone; vertical circulation is organized through three sky lobbies, segmenting elevator service through transfer levels rather than a single continuous run, with elevator efficiency and sky lobbies addressing vertical transportation challenges by allowing transfers without overloading individual elevators.[32][96][2]
 
