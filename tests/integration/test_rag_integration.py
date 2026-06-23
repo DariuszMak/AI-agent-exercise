@@ -25,12 +25,12 @@ def test_index_and_query(client: FlaskClient, tmp_path: Path) -> None:
 
 
 @pytest.mark.slow
-def test_empire_state_building_semantic_polish(client: FlaskClient, tmp_path: Path) -> None:
+def test_empire_state_building_semantic_english(client: FlaskClient, tmp_path: Path) -> None:
     docs = tmp_path / "documents"
     docs.mkdir(parents=True, exist_ok=True)
 
     (docs / "empire_state_building.txt").write_text(
-        "KSeF umożliwia wystawianie i odbieranie faktur ustrukturyzowanych.",
+        "Empire State Building is a 102-story Art Deco skyscraper in Manhattan, New York City, and one of the world's most famous landmarks and observation towers.",
         encoding="utf-8",
     )
 
@@ -38,7 +38,7 @@ def test_empire_state_building_semantic_polish(client: FlaskClient, tmp_path: Pa
 
     response = client.post(
         "/query",
-        json={"query": "Do czego służy KSeF?"},
+        json={"query": "What is Empire State Building?"},
     )
 
     results = response.get_json()
