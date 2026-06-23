@@ -38,7 +38,7 @@ class ToolRegistry:
 
     def get(self, name: str) -> ToolDefinition:
         if name not in self._tools:
-            raise KeyError(f"Narzędzie '{name}' nie istnieje w rejestrze")
+            raise KeyError(f"Toll '{name}' doesn't exist in the registry")
         return self._tools[name]
 
     def all(self) -> list[ToolDefinition]:
@@ -46,7 +46,7 @@ class ToolRegistry:
 
     def to_prompt_block(self) -> str:
         if not self._tools:
-            return "(brak dostępnych narzędzi)"
+            return "(no tools available)"
         return "\n".join(t.to_prompt_line() for t in self._tools.values())
 
     def __len__(self) -> int:

@@ -85,7 +85,7 @@ def test_len() -> None:
 def test_to_prompt_block_empty() -> None:
     registry = ToolRegistry()
     block = registry.to_prompt_block()
-    assert block == "(brak dostępnych narzędzi)"
+    assert block == "(no tools available)"
 
 
 def test_to_prompt_block_with_tools() -> None:

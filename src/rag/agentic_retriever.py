@@ -23,11 +23,11 @@ class AgenticRetriever:
         from src.rag.retriever import search as faiss_search
 
         results = faiss_search(self._index, self._documents, query, k=k)
-        logger.debug("FAISS zwrócił %d wyników dla query=%r", len(results), query[:60])
+        logger.debug("FAISS returned %d results for query=%r", len(results), query[:60])
         return results
 
     @classmethod
     def from_index_store(cls, store: Any) -> AgenticRetriever:
         if not store.ready:
-            raise ValueError("IndexStore nie jest gotowy — najpierw wywołaj store.build()")
+            raise ValueError("IndexStore is not ready - run store.build() first")
         return cls(index=store.index, documents=store.documents)

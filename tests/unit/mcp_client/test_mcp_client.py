@@ -42,7 +42,7 @@ def test_list_tools_raises_on_connection_error() -> None:
     client = MCPClient(server_url="http://localhost:8765")
     with (
         patch("requests.post", side_effect=requests.ConnectionError("refused")),
-        pytest.raises(ConnectionError, match="Serwer MCP niedostępny"),
+        pytest.raises(ConnectionError, match="Server MCP unavailable"),
     ):
         client.list_tools()
 

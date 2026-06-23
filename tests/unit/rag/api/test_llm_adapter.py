@@ -112,7 +112,7 @@ def test_post_raises_connection_error_on_request_exception() -> None:
     adapter = OllamaAdapter()
     with (
         patch("requests.post", side_effect=requests.ConnectionError("refused")),
-        pytest.raises(ConnectionError, match="Ollama niedostępna"),
+        pytest.raises(ConnectionError, match="Ollama unavailable"),
     ):
         adapter.complete("hi")
 
@@ -128,7 +128,7 @@ def test_post_raises_on_non_dict_response() -> None:
 
 def test_post_raises_on_invalid_scheme() -> None:
     adapter = OllamaAdapter(base_url="ftp://evil.example.com")
-    with pytest.raises(ValueError, match="Nieobsługiwany schemat URL"):
+    with pytest.raises(ValueError, match="Wrong URL schema"):
         adapter.complete("hi")
 
 

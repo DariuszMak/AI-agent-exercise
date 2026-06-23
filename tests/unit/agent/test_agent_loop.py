@@ -24,7 +24,7 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
         {
             "id": f"doc_{i}.txt",
             "chunk_id": str(i),
-            "text": f"KSeF to system faktur numer {i}. Umożliwia wystawianie faktur.",
+            "text": f"KSeF is system invoice number {i}. It enables issuing invoices.",
             "score": 0.85,
             "token_count": 12,
             "char_start": 0,
@@ -37,12 +37,12 @@ def _make_docs(n: int = 3) -> list[dict[str, Any]]:
 @pytest.fixture()
 def mock_llm() -> MagicMock:
     llm = MagicMock()
-    llm.complete.return_value = LLMResponse(content="KSeF to Krajowy System e-Faktur.", model="gemma:2b", done=True)
+    llm.complete.return_value = LLMResponse(content="KSeF is the National e-Invoicing System.", model="gemma:2b", done=True)
     llm.complete_json.return_value = {
         "needs_external_tool": False,
         "tool_name": None,
         "tool_arguments": {},
-        "reasoning": "pytanie dotyczy RAG",
+        "reasoning": "query is about RAG",
     }
     return llm
 
@@ -58,7 +58,7 @@ def mock_retriever() -> MagicMock:
 def mock_mcp() -> MagicMock:
     mcp = MagicMock(spec=MCPClient)
     mcp.list_tools.return_value = [
-        {"name": "log_query", "description": "Loguje zapytanie"},
+        {"name": "log_query", "description": "Logs query"},
     ]
     mcp.call_tool.return_value = MCPToolResult(tool_name="log_query", content="OK", is_error=False)
     return mcp
@@ -79,7 +79,7 @@ def test_agent_returns_answer_on_good_rag(
         max_iterations=3,
     )
 
-    result = agent.run("Co to jest KSeF?")
+    result = agent.run("What is KSeF?")
 
     assert isinstance(result, AgentResult)
     assert len(result.answer) > 0
@@ -95,7 +95,7 @@ def test_agent_retries_on_low_score(
         {
             "id": "x.txt",
             "chunk_id": "0",
-            "text": "Nie ma tu żadnych informacji.",
+            "text": "No relevant information here.",
             "score": 0.1,
             "token_count": 5,
             "char_start": 0,
@@ -114,7 +114,7 @@ def test_agent_retries_on_low_score(
         max_iterations=3,
     )
 
-    result = agent.run("Co to jest KSeF?")
+    result = agent.run("What is KSeF?")
 
     assert result.total_iterations == 3
     assert retriever.search.call_count == 3
@@ -129,11 +129,11 @@ def test_agent_calls_mcp_tool_when_llm_requests(
         "needs_external_tool": True,
         "tool_name": "fetch_external_context",
         "tool_arguments": {"topic": "KSeF"},
-        "reasoning": "potrzebuję zewnętrznych danych",
+        "reasoning": "needs external data",
     }
     mock_mcp.call_tool.return_value = MCPToolResult(
         tool_name="fetch_external_context",
-        content="KSeF działa od 2024.",
+        content="KSeF has been active since 2024.",
         is_error=False,
     )
 
@@ -146,9 +146,12 @@ def test_agent_calls_mcp_tool_when_llm_requests(
         max_iterations=1,
     )
 
-    result = agent.run("Co to jest KSeF?")
+    result = agent.run("What is KSeF?")
 
-    fetch_calls = [call for call in mock_mcp.call_tool.call_args_list if call.args[0] == "fetch_external_context"]
+    fetch_calls = [
+        call for call in mock_mcp.call_tool.call_args_list
+        if call.args[0] == "fetch_external_context"
+    ]
     assert len(fetch_calls) == 1
     assert result.steps[0].tool_called == "fetch_external_context"
 
@@ -158,7 +161,7 @@ def test_agent_handles_mcp_unavailable(
     mock_retriever: MagicMock,
 ) -> None:
     broken_mcp = MagicMock(spec=MCPClient)
-    broken_mcp.list_tools.side_effect = ConnectionError("serwer MCP offline")
+    broken_mcp.list_tools.side_effect = ConnectionError("MCP server offline")
 
     evaluator = RAGEvaluator(relevance_threshold=0.5)
     agent = AgentLoop(
@@ -169,7 +172,7 @@ def test_agent_handles_mcp_unavailable(
         max_iterations=1,
     )
 
-    result = agent.run("Co to jest KSeF?")
+    result = agent.run("What is KSeF?")
 
     assert isinstance(result, AgentResult)
     assert len(result.answer) > 0

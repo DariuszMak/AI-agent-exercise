@@ -19,7 +19,7 @@ def _cached_completion(prompt: str, model: str) -> str:
     response = _CLIENT.chat.completions.create(
         model=model,
         messages=[
-            {"role": "system", "content": "Jesteś pomocnym asystentem RAG."},
+            {"role": "system", "content": "You are helpful RAG assistant."},
             {"role": "user", "content": prompt},
         ],
         temperature=0.0,
@@ -37,13 +37,13 @@ def generate_answer(
     context = "\n\n".join(context_chunks)
 
     prompt = f"""
-Odpowiadaj wyłącznie na podstawie kontekstu.
-Jeżeli nie ma informacji w kontekście, odpowiedz: "Nie wiem".
+Answer only based on the provided context.
+If the context does not contain the answer, respond: "I don't know."
 
-KONTEKST:
+CONTEXT:
 {context}
 
-PYTANIE:
+QUESTION:
 {question}
 """.strip()
 
