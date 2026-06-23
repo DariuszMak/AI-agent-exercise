@@ -74,7 +74,7 @@ class AgentLoop:
             if think_result.get("needs_external_tool") and self._mcp:
                 tool_called, tool_result = self._act_mcp(think_result, current_query)
                 if tool_result:
-                    context_chunks.append(f"[Narzędzie: {tool_called}]\n{tool_result}")
+                    context_chunks.append(f"[Tool: {tool_called}]\n{tool_result}")
 
             rag_results = self._act_rag(current_query)
             eval_result = self._evaluator.evaluate(current_query, rag_results)
@@ -94,7 +94,7 @@ class AgentLoop:
 
             if eval_result.passed:
                 logger.info(
-                    "Wyniki wystarczające (score=%.3f) — generuję odpowiedź",
+                    "Sufficient results (score=%.3f) - the answer will be generated",
                     eval_result.score,
                 )
                 context_chunks.extend(r["text"] for r in rag_results)
@@ -108,7 +108,7 @@ class AgentLoop:
 
             if iteration < self._max_iter:
                 logger.info(
-                    "Przepisuję zapytanie (score=%.3f < próg)",
+                    "Rewriting query (score=%.3f < treshold)",
                     eval_result.score,
                 )
                 current_query = self._rewriter.rewrite(
@@ -118,7 +118,7 @@ class AgentLoop:
                     iteration=iteration,
                 )
             else:
-                logger.warning("Osiągnięto limit iteracji — odpowiadam z najlepszym kontekstem")
+                logger.warning("Iterations limit - the answer with best context will be generated")
                 context_chunks.extend(r["text"] for r in rag_results)
 
         return self._build_result(
@@ -133,7 +133,7 @@ class AgentLoop:
         if not self._available_tools:
             return {
                 "needs_external_tool": False,
-                "reasoning": "brak narzędzi MCP",
+                "reasoning": "lack of MCP tools",
             }
 
         tools_list = "\n".join(f"- {t['name']}: {t.get('description', '')}" for t in self._available_tools)
@@ -147,7 +147,7 @@ class AgentLoop:
             decision: Any = self._llm.complete_json(prompt)
             logger.debug("THINK decision: %s", decision)
         except (ValueError, ConnectionError) as exc:
-            logger.warning("THINK fallback do RAG (błąd LLM): %s", exc)
+            logger.warning("THINK fallback do RAG (LLM error): %s", exc)
             return {
                 "needs_external_tool": False,
                 "reasoning": f"fallback: {exc}",
@@ -174,7 +174,7 @@ class AgentLoop:
         result = self._mcp.call_tool(tool_name, tool_args)
 
         if result.is_error:
-            logger.warning("Narzędzie MCP zwróciło błąd: %s", result.error_message)
+            logger.warning("MCP tool error: %s", result.error_message)
             return tool_name, None
 
         return tool_name, str(result.content)
@@ -210,7 +210,7 @@ class AgentLoop:
             self._available_tools = self._mcp.list_tools()
         except ConnectionError as exc:
             logger.warning(
-                "Nie udało się pobrać listy narzędzi MCP: %s",
+                "MCP tools list generation failed: %s",
                 exc,
             )
             self._available_tools = []
@@ -237,7 +237,7 @@ class AgentLoop:
             )
             answer = response.content
         except ConnectionError as exc:
-            answer = f"[Błąd LLM: {exc}]"
+            answer = f"[LLM error: {exc}]"
 
         logger.info(
             "Agent DONE | iterations=%d, score=%.3f",
