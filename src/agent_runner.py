@@ -37,9 +37,9 @@ def build_agent() -> Any:
         candidate = MCPClient(server_url=MCP_SERVER_URL)
         candidate.list_tools()
         mcp = candidate
-        logger.info("Server MCP available: %s", MCP_SERVER_URL)
+        logger.info("MCP server available: %s", MCP_SERVER_URL)
     except ConnectionError:
-        logger.warning("Server MCP unavailable — agent works without external tools")
+        logger.warning("MCP server unavailable — agent works without external tools")
 
     evaluator = RAGEvaluator(relevance_threshold=0.20)
     rewriter = RAGRewriter(llm=llm)
