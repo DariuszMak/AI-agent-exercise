@@ -42,7 +42,7 @@ def test_faiss_retrieval_returns_results(populated_store: IndexStore) -> None:
 def test_retrieval_result_has_metadata(populated_store: IndexStore) -> None:
     assert populated_store.index is not None
     with patch("src.rag.retriever.embed", side_effect=_fake_embed):
-        results = search(populated_store.index, populated_store.documents, "faktura", k=2)
+        results = search(populated_store.index, populated_store.documents, "building", k=2)
     for r in results:
         assert "score" in r
         assert "token_count" in r

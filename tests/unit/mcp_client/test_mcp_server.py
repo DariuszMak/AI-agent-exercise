@@ -197,7 +197,7 @@ def test_fetch_external_context_camunda() -> None:
 
 def test_fetch_external_context_unknown() -> None:
     result = fetch_external_context("something completely unknown")
-    assert "Brak danych" in result
+    assert "No data" in result
 
 
 def test_fetch_external_context_case_insensitive() -> None:
