@@ -1,33 +1,33 @@
 from __future__ import annotations
 
 THINK_PROMPT = """\
-Jesteś agentem AI analizującym pytania użytkownika.
+You are an AI agent analyzing the user's question.
 
-Pytanie: "{query}"
+Question: "{query}"
 
-Dostępne narzędzia zewnętrzne (MCP):
+Available external tools (MCP):
 {tools_list}
 
-Zdecyduj, czy do odpowiedzi na to pytanie potrzebne są narzędzia zewnętrzne.
+Decide whether external tools are required to answer this question.
 
-Odpowiedz WYŁĄCZNIE w formacie JSON (bez bloków kodu):
+Respond ONLY in JSON format (without code blocks):
 {{
   "needs_external_tool": true/false,
-  "tool_name": "nazwa_narzędzia lub null",
+  "tool_name": "tool_name or null",
   "tool_arguments": {{}},
-  "reasoning": "krótkie uzasadnienie"
+  "reasoning": "brief justification"
 }}
 """
 
 ANSWER_PROMPT = """\
-Odpowiadaj wyłącznie na podstawie poniższego kontekstu.
-Jeżeli kontekst nie zawiera odpowiedzi, powiedz: "Nie wiem".
+Answer exclusively based on the context provided below.
+If the context does not contain the answer, say: "I don't know."
 
-KONTEKST:
+CONTEXT:
 {context}
 
-PYTANIE:
+QUESTION:
 {question}
 
-Odpowiedź:
+Answer:
 """
