@@ -68,7 +68,7 @@ class RAGRewriter:
 
         rewritten = content.strip('"').strip("'")
 
-        logger.info("Rewrote query: %r â†’ %r", failed_query, rewritten)
+        logger.info("Rewrote query: %r -> %r", failed_query, rewritten)
         return rewritten
 
     def _rewrite_heuristic(self, query: str, iteration: int) -> str:
@@ -82,5 +82,5 @@ class RAGRewriter:
         idx = (iteration - 1) % len(strategies)
         rewritten = strategies[idx](query)
 
-        logger.info("Heuristic query rewrite: %r â†’ %r", query, rewritten)
+        logger.info("Heuristic query rewrite: %r -> %r", query, rewritten)
         return rewritten
