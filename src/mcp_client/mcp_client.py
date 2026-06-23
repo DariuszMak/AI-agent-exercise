@@ -27,7 +27,7 @@ class MCPClient:
     def list_tools(self) -> list[dict[str, Any]]:
         result = self._rpc("tools/list", {})
         tools: list[dict[str, Any]] = result.get("tools", [])
-        logger.debug("Dostępne narzędzia MCP: %s", [t.get("name") for t in tools])
+        logger.debug("Available MCP tools: %s", [t.get("name") for t in tools])
         return tools
 
     def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> MCPToolResult:
@@ -42,7 +42,7 @@ class MCPClient:
             if result.get("isError"):
                 error_text = _extract_text(content)
                 logger.warning(
-                    "Narzędzie %s zwróciło błąd: %s",
+                    "Tool %s returned an error: %s",
                     tool_name,
                     error_text,
                 )
@@ -60,7 +60,7 @@ class MCPClient:
 
         except (ConnectionError, TimeoutError, ValueError) as exc:
             logger.debug(
-                "Wywołanie narzędzia %s nie powiodło się: %s",
+                "Tool invocation %s failed: %s",
                 tool_name,
                 exc,
             )
@@ -98,7 +98,7 @@ class MCPClient:
             body: dict[str, Any] = response.json()
 
         except requests.RequestException as exc:
-            raise ConnectionError(f"Serwer MCP niedostępny ({self.server_url}): {exc}") from exc
+            raise ConnectionError(f"MCP server unavailable ({self.server_url}): {exc}") from exc
 
         if "error" in body:
             err = body["error"]
@@ -112,6 +112,10 @@ def _extract_text(content: list[dict[str, Any]] | Any) -> str:
     if not isinstance(content, list):
         return str(content)
 
-    texts = [block.get("text", "") for block in content if isinstance(block, dict) and block.get("type") == "text"]
+    texts = [
+        block.get("text", "")
+        for block in content
+        if isinstance(block, dict) and block.get("type") == "text"
+    ]
 
     return "\n".join(texts)

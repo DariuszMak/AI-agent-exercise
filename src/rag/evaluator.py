@@ -37,7 +37,7 @@ class RAGEvaluator:
             return EvaluationResult(
                 score=0.0,
                 passed=False,
-                reason="Brak wyników wyszukiwania",
+                reason="No search results",
                 best_chunk="",
             )
 
@@ -45,7 +45,7 @@ class RAGEvaluator:
             return EvaluationResult(
                 score=0.1,
                 passed=False,
-                reason=f"Za mało wyników: {len(results)} < {self._min_results}",
+                reason=f"Too few results: {len(results)} < {self._min_results}",
                 best_chunk=results[0].get("text", ""),
             )
 
@@ -57,7 +57,10 @@ class RAGEvaluator:
             return EvaluationResult(
                 score=best_score,
                 passed=False,
-                reason=(f"Najwyższy wynik podobieństwa ({best_score:.3f}) poniżej progu ({self._threshold:.3f})"),
+                reason=(
+                    f"Highest similarity score ({best_score:.3f}) "
+                    f"below threshold ({self._threshold:.3f})"
+                ),
                 best_chunk=best_text,
             )
 
@@ -65,12 +68,12 @@ class RAGEvaluator:
             return EvaluationResult(
                 score=best_score * 0.5,
                 passed=False,
-                reason="Najlepszy fragment jest zbyt krótki (< 20 znaków)",
+                reason="Best chunk is too short (< 20 characters)",
                 best_chunk=best_text,
             )
 
         logger.debug(
-            "Ocena RAG: score=%.3f, wyniki=%d, query=%r",
+            "RAG evaluation: score=%.3f, results=%d, query=%r",
             best_score,
             len(results),
             query[:60],
@@ -79,6 +82,6 @@ class RAGEvaluator:
         return EvaluationResult(
             score=best_score,
             passed=True,
-            reason=f"Wynik podobieństwa {best_score:.3f} ≥ próg {self._threshold:.3f}",
+            reason=f"Similarity score {best_score:.3f} ≥ threshold {self._threshold:.3f}",
             best_chunk=best_text,
         )

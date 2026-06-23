@@ -66,7 +66,7 @@ class OllamaAdapter:
 
     def complete_json(self, prompt: str) -> Any:
         json_prompt = (
-            f"{prompt}\n\nOdpowiedz WYŁĄCZNIE poprawnym JSON-em, bez żadnego dodatkowego tekstu ani bloków kodu."
+            f"{prompt}\n\nRespond ONLY with valid JSON, without any extra text or code blocks."
         )
 
         response = self.complete(
@@ -80,10 +80,10 @@ class OllamaAdapter:
             return json.loads(raw)
         except json.JSONDecodeError as exc:
             logger.warning(
-                "LLM zwrócił niepoprawny JSON: %s",
+                "LLM returned invalid JSON: %s",
                 raw[:200],
             )
-            raise ValueError(f"Niepoprawny JSON od LLM: {raw[:200]}") from exc
+            raise ValueError(f"Invalid JSON from LLM: {raw[:200]}") from exc
 
     def _post(
         self,
@@ -94,7 +94,7 @@ class OllamaAdapter:
 
         parsed = urlparse(url)
         if parsed.scheme not in {"http", "https"}:
-            raise ValueError(f"Nieobsługiwany schemat URL: {parsed.scheme}")
+            raise ValueError(f"Unsupported URL scheme: {parsed.scheme}")
 
         try:
             response = requests.post(
@@ -113,7 +113,7 @@ class OllamaAdapter:
 
         except requests.RequestException as exc:
             logger.exception(
-                "Błąd połączenia z Ollama pod %s",
+                "Connection error to Ollama at %s",
                 url,
             )
-            raise ConnectionError(f"Ollama niedostępna: {exc}") from exc
+            raise ConnectionError(f"Ollama unavailable: {exc}") from exc

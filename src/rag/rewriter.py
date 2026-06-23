@@ -12,20 +12,20 @@ if TYPE_CHECKING:
 logger = structlog.get_logger(__name__)
 
 _REWRITE_PROMPT = """\
-Jesteś ekspertem od wyszukiwania informacji.
+You are an expert in information retrieval.
 
-Oryginalne pytanie użytkownika:
+Original user question:
 "{original_query}"
 
-Poprzednie zapytanie do wyszukiwarki (które dało słabe wyniki):
+Previous search query (which produced poor results):
 "{failed_query}"
 
-Przyczyna słabych wyników: {reason}
+Reason for the poor results: {reason}
 
-Wygeneruj JEDNO nowe, ulepszone zapytanie do wyszukiwarki.
-- Użyj synonimów lub alternatywnych sformułowań
-- Bądź bardziej precyzyjny lub bardziej ogólny (zależnie od kontekstu)
-- Odpowiedz TYLKO tekstem zapytania, bez żadnych wyjaśnień
+Generate ONE new, improved search query.
+- Use synonyms or alternative wording.
+- Be either more specific or more general, depending on the context.
+- Respond ONLY with the search query text, without any explanations.
 """
 
 
@@ -44,7 +44,7 @@ class RAGRewriter:
             try:
                 return self._rewrite_with_llm(original_query, failed_query, reason)
             except (ConnectionError, ValueError) as exc:
-                logger.warning("LLM niedostępny do przepisania zapytania: %s", exc)
+                logger.warning("LLM unavailable for query rewriting: %s", exc)
 
         return self._rewrite_heuristic(failed_query, iteration)
 
@@ -68,19 +68,19 @@ class RAGRewriter:
 
         rewritten = content.strip('"').strip("'")
 
-        logger.info("Przepisano zapytanie: %r → %r", failed_query, rewritten)
+        logger.info("Rewrote query: %r → %r", failed_query, rewritten)
         return rewritten
 
     def _rewrite_heuristic(self, query: str, iteration: int) -> str:
         strategies: list[Callable[[str], str]] = [
             lambda q: q.lower(),
             lambda q: " ".join(dict.fromkeys(q.split())),
-            lambda q: q + " definicja",
+            lambda q: q + " definition",
             lambda q: q.split()[0] if q.split() else q,
         ]
 
         idx = (iteration - 1) % len(strategies)
         rewritten = strategies[idx](query)
 
-        logger.info("Heurystyczne przepisanie zapytania: %r → %r", query, rewritten)
+        logger.info("Heuristic query rewrite: %r → %r", query, rewritten)
         return rewritten

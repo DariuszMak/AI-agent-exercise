@@ -41,7 +41,7 @@ class MCPServer:
                 "inputSchema": input_schema,
                 "_fn": fn,
             }
-            logger.info("Zarejestrowano narzędzie MCP: %s", name)
+            logger.info("Registered MCP tool: %s", name)
             return fn
 
         return decorator
@@ -66,7 +66,7 @@ class MCPServer:
                 pass
 
         httpd = HTTPServer((self._host, self._port), Handler)
-        logger.info("Serwer MCP uruchomiony na %s", self.url)
+        logger.info("MCP server started at %s", self.url)
         httpd.serve_forever()
 
     def _dispatch(self, request: dict[str, Any]) -> dict[str, Any]:
@@ -80,9 +80,9 @@ class MCPServer:
             elif method == "tools/call":
                 result = self._call_tool(cast("dict[str, Any]", params))
             else:
-                return _error(req_id, -32601, f"Nieznana metoda: {method}")
+                return _error(req_id, -32601, f"Unknown method: {method}")
         except Exception as exc:
-            logger.exception("Błąd podczas obsługi metody %s", method)
+            logger.exception("Error while handling method %s", method)
             return _error(req_id, -32603, str(exc))
 
         return {"jsonrpc": "2.0", "id": req_id, "result": result}
@@ -100,7 +100,7 @@ class MCPServer:
                 "content": [
                     {
                         "type": "text",
-                        "text": f"Nieznane narzędzie: {name}",
+                        "text": f"Unknown tool: {name}",
                     }
                 ],
             }
@@ -117,7 +117,7 @@ class MCPServer:
                 "content": [
                     {
                         "type": "text",
-                        "text": f"Brakujące argumenty: {missing}",
+                        "text": f"Missing arguments: {missing}",
                     }
                 ],
             }
@@ -130,7 +130,7 @@ class MCPServer:
                 "content": [
                     {
                         "type": "text",
-                        "text": f"Błąd wywołania: {exc}",
+                        "text": f"Invocation error: {exc}",
                     }
                 ],
             }
@@ -157,21 +157,21 @@ server = MCPServer()
 
 @server.tool(
     name="log_query",
-    description="Zapisuje zapytanie agenta do pliku logu JSONL.",
+    description="Stores an agent query in a JSONL log file.",
     input_schema={
         "type": "object",
         "properties": {
             "query": {
                 "type": "string",
-                "description": "Treść zapytania",
+                "description": "Query text",
             },
             "iteration": {
                 "type": "integer",
-                "description": "Numer iteracji agenta",
+                "description": "Agent iteration number",
             },
             "score": {
                 "type": "number",
-                "description": "Ocena jakości RAG (0.0-1.0)",
+                "description": "RAG quality score (0.0-1.0)",
             },
         },
         "required": ["query"],
@@ -194,18 +194,18 @@ def log_query(
     with _LOG_FILE.open("a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-    return f"Zapisano log: iteration={iteration}, score={score:.2f}"
+    return f"Log saved: iteration={iteration}, score={score:.2f}"
 
 
 @server.tool(
     name="fetch_external_context",
-    description="Pobiera dodatkowy kontekst z zewnętrznego źródła (mock).",
+    description="Retrieves additional context from an external source (mock).",
     input_schema={
         "type": "object",
         "properties": {
             "topic": {
                 "type": "string",
-                "description": "Temat do wyszukania",
+                "description": "Topic to search for",
             },
         },
         "required": ["topic"],
@@ -213,8 +213,12 @@ def log_query(
 )
 def fetch_external_context(topic: str) -> str:
     external_db: dict[str, str] = {
-        "empire_state_building": ("KSeF (Krajowy System e-Faktur) to platforma MF do fakturowania od 2024."),
-        "jeddah_tower": ("Camunda to silnik BPMN/DMN do automatyzacji procesów biznesowych."),
+        "empire_state_building": (
+            "KSeF (National e-Invoicing System) is the Ministry of Finance's e-invoicing platform introduced in 2024."
+        ),
+        "jeddah_tower": (
+            "Camunda is a BPMN/DMN workflow engine used for business process automation."
+        ),
     }
 
     key = topic.lower()
@@ -223,7 +227,7 @@ def fetch_external_context(topic: str) -> str:
         if k in key:
             return v
 
-    return f"Brak danych dla tematu: {topic}"
+    return f"No data available for topic: {topic}"
 
 
 if __name__ == "__main__":
