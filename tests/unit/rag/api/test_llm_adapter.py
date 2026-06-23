@@ -103,7 +103,7 @@ def test_complete_json_raises_on_invalid_json() -> None:
     body = {"message": {"content": "not json at all!!"}, "model": "x", "done": True}
     with (
         patch("requests.post", return_value=_make_response(body)),
-        pytest.raises(ValueError, match="Niepoprawny JSON"),
+        pytest.raises(ValueError, match="Invalid JSON"),
     ):
         adapter.complete_json("return json")
 
