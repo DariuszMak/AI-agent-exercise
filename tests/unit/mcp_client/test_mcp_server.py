@@ -190,9 +190,9 @@ def test_fetch_external_context_empire_state_building() -> None:
     assert "Empire State Building" in result
 
 
-def test_fetch_external_context_camunda() -> None:
-    result = fetch_external_context("Camunda platform")
-    assert "Camunda" in result
+def test_fetch_external_context_jeddah_tower() -> None:
+    result = fetch_external_context("Jeddah Tower building")
+    assert "Jeddah Tower" in result
 
 
 def test_fetch_external_context_unknown() -> None:
