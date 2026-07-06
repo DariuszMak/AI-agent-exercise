@@ -1,4 +1,4 @@
-# Python AI Agent Excercise
+# Python AI Agent Exercise
 
 ### Project structure diagrams
 
