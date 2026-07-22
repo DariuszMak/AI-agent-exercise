@@ -36,8 +36,7 @@ def client(tmp_path: Path) -> FlaskClient:
 
 
 @pytest.fixture(scope="module")
-def rag_client(tmp_path: Path) -> FlaskClient:
-    """Fixture budujący indeks na podstawie rzeczywistych dokumentów i zwraca klient testowy."""
+def rag_client() -> FlaskClient:
     docs = Path("storage/documents/EN")
     app = create_app(documents_path=docs, autoload=True)
     app.config["TESTING"] = True
