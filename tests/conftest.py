@@ -2,12 +2,11 @@ import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
-import src.rag.embeddings as emb
-
 
 import numpy as np
 import pytest
 
+import src.rag.embeddings as emb
 from src.rag.api.app import create_app
 
 if TYPE_CHECKING:
