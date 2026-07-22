@@ -47,11 +47,17 @@ eval_model = GemmaOllamaJudge(model_name="gemma2:2b")
 TEST_CASES = [
     (
         "What is Empire State Building?",
-        "The Empire State Building is a skyscraper located on the west side of Fifth Avenue, between 33rd Street to the south...",
+        (
+            "The Empire State Building is a skyscraper located on the west side of Fifth Avenue, "
+            "between 33rd Street to the south..."
+        ),
     ),
     (
         "What is Jeddah Tower?",
-        "Jeddah Tower is a megatall skyscraper currently under construction in Jeddah, Saudi Arabia. It is the first 1-kilome...",
+        (
+            "Jeddah Tower is a megatall skyscraper currently under construction in Jeddah, "
+            "Saudi Arabia. It is the first 1-kilome..."
+        ),
     ),
 ]
 

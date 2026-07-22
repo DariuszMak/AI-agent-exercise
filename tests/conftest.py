@@ -29,8 +29,6 @@ def client(tmp_path: Path) -> FlaskClient:
         instance = MagicMock()
         instance.encode.side_effect = lambda t: _fake_embed(t)
         mock_st.return_value = instance
-        import src.rag.embeddings as emb
-
         emb._model = None
         app = create_app(docs)
     app.config["TESTING"] = True
@@ -40,21 +38,12 @@ def client(tmp_path: Path) -> FlaskClient:
 @pytest.fixture()
 def rag_client(tmp_path: Path) -> FlaskClient:
     docs = tmp_path / "documents"
-
-    if DOCUMENTS_SOURCE.exists():
-        shutil.copytree(DOCUMENTS_SOURCE, docs)
-    else:
-        docs.mkdir()
-        (docs / "sample.txt").write_text(
-            "The Empire State Building is a famous skyscraper in Manhattan. "
-            "Jeddah Tower is a planned supertall skyscraper in Saudi Arabia."
-        )
+    shutil.copytree(DOCUMENTS_SOURCE, docs)
 
     with patch("src.rag.embeddings.SentenceTransformer") as mock_st:
         instance = MagicMock()
         instance.encode.side_effect = lambda t: _fake_embed(t)
         mock_st.return_value = instance
-
         emb._model = None
         app = create_app(docs)
 
