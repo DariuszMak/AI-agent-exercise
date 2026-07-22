@@ -5,10 +5,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 from deepeval import assert_evaluation
-from flask.testing import FlaskClient
 
 if TYPE_CHECKING:
-    pass
+    from flask.testing import FlaskClient
 
 DOCUMENTS_PATH = Path("storage/documents/EN")
 
@@ -21,7 +20,7 @@ TEST_CASES = [
 
 @pytest.mark.deepeval
 @pytest.mark.slow
-@pytest.mark.parametrize("question,expected_keywords", TEST_CASES)
+@pytest.mark.parametrize(("question", "expected_keywords"), TEST_CASES)
 def test_rag_accuracy_deepeval(rag_client: FlaskClient, question: str, expected_keywords: list[str]) -> None:
     resp = rag_client.post("/ask", json={"query": question})
     assert resp.status_code == 200, f"Query failed: {resp.get_json()}"
@@ -35,5 +34,5 @@ def test_rag_accuracy_deepeval(rag_client: FlaskClient, question: str, expected_
         actual_output=answer,
         retrieval_context=contexts,
         expected_output=f"Informacje dotyczące {' '.join(expected_keywords)}",
-        model="gemma:2b", 
+        model="gemma:2b",
     )

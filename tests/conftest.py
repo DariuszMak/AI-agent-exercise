@@ -1,10 +1,3 @@
-from typing import TYPE_CHECKING
-from unittest.mock import MagicMock, patch
-
-import numpy as np
-import pytest
-
-from src.rag.api.app import create_app
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,11 +10,8 @@ import pytest
 from src.rag.api.app import create_app
 
 if TYPE_CHECKING:
-    from pathlib import Path
 
     from flask.testing import FlaskClient
-
-
 
 
 def _fake_embed(text: str) -> np.ndarray:
@@ -44,8 +34,6 @@ def client(tmp_path: Path) -> FlaskClient:
         app = create_app(docs)
     app.config["TESTING"] = True
     return app.test_client()
-
-
 
 
 @pytest.fixture(scope="module")
