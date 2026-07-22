@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import pytest
 import requests
-from deepeval import assert_test
+from deepeval import assert_test  # type: ignore[attr-defined]
 from deepeval.metrics import GEval
 from deepeval.models import DeepEvalBaseLLM
 from deepeval.test_case import LLMTestCase, SingleTurnParams
@@ -16,14 +16,12 @@ if TYPE_CHECKING:
 DOCUMENTS_PATH = Path("storage/documents/EN")
 
 
-class GemmaOllamaJudge(DeepEvalBaseLLM):
-    """Lekki wrapper Ollama bez potrzeby instalowania langchain-ollama."""
-
-    def __init__(self, model_name: str = "gemma2:2b", base_url: str = "http://localhost:11434"):
+class GemmaOllamaJudge(DeepEvalBaseLLM):  # type: ignore[no-untyped-call]
+    def __init__(self, model_name: str = "gemma2:2b", base_url: str = "http://localhost:11434") -> None:
         self.model_name = model_name
         self.base_url = base_url
 
-    def load_model(self):
+    def load_model(self) -> GemmaOllamaJudge:
         return self
 
     def generate(self, prompt: str) -> str:
@@ -33,7 +31,7 @@ class GemmaOllamaJudge(DeepEvalBaseLLM):
             timeout=60,
         )
         response.raise_for_status()
-        return response.json()["response"]
+        return cast("str", response.json()["response"])
 
     async def a_generate(self, prompt: str) -> str:
         return self.generate(prompt)
