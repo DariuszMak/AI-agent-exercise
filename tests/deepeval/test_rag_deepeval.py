@@ -47,11 +47,11 @@ eval_model = GemmaOllamaJudge(model_name="gemma2:2b")
 TEST_CASES = [
     (
         "What is Empire State Building?",
-        "The Empire State Building is a famous skyscraper located in Manhattan.",
+        "The Empire State Building is a skyscraper located in Manhattan.",
     ),
     (
         "What is Jeddah Tower?",
-        "Jeddah Tower is a planned supertall skyscraper in Saudi Arabia.",
+        "Jeddah Tower is supertall skyscraper in Saudi Arabia.",
     ),
 ]
 

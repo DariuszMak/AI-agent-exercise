@@ -2,6 +2,8 @@ import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
+import src.rag.embeddings as emb
+
 
 import numpy as np
 import pytest
@@ -54,15 +56,10 @@ def rag_client(tmp_path: Path) -> FlaskClient:
         instance.encode.side_effect = lambda t: _fake_embed(t)
         mock_st.return_value = instance
 
-        import src.rag.embeddings as emb
-
         emb._model = None
-
         app = create_app(docs)
 
     app.config["TESTING"] = True
     test_client = app.test_client()
-
     test_client.post("/index")
-
     return test_client

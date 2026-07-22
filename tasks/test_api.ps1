@@ -1,3 +1,10 @@
+$response = Invoke-RestMethod -Uri http://127.0.0.1:5000/index `
+    -Method POST `
+    -ContentType "application/json"
+
+$response
+
+
 $body = @{ query = "What is Empire State Building?" } | ConvertTo-Json
 
 $response = Invoke-RestMethod -Uri http://127.0.0.1:5000/query `
