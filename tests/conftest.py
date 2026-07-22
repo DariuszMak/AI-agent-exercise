@@ -10,7 +10,6 @@ import pytest
 from src.rag.api.app import create_app
 
 if TYPE_CHECKING:
-
     from flask.testing import FlaskClient
 
 
