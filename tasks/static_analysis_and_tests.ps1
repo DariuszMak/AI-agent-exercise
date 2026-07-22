@@ -5,4 +5,6 @@ uv run pytest tests/ --cov=src --cov-report=html --cov-report=xml --cov-config=.
 
 uv run pytest tests/eval/test_rag_accuracy.py ;  
 
+uv run pytest tests/deepeval/ -m "deepeval" -v --tb=short
+
 Start-Process .\htmlcov\index.html ; 
