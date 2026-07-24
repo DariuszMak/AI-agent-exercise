@@ -1,13 +1,24 @@
 filebeat.inputs:
   - type: filestream
-    id: app-log
+    id: python-app-logs
+    enabled: true
     paths:
-      - /shared-logs/app.log
+      - /app-logs/*.log
     parsers:
       - ndjson:
           keys_under_root: true
+          overwrite_keys: true
           add_error_key: true
           message_key: event
+
+  - type: container
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    processors:
+      - decode_json_fields:
+          fields: ["message"]
+          overwrite_keys: true
+          add_error_key: true
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
