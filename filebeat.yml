@@ -5,7 +5,6 @@ filebeat.inputs:
     processors:
       - decode_json_fields:
           fields: ["message"]
-          target_prefix: ""
           overwrite_keys: true
           add_error_key: true
 
