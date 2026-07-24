@@ -1,7 +1,13 @@
 filebeat.inputs:
-  - type: container
+  - type: filestream
+    id: app-log
     paths:
-      - /var/lib/docker/containers/*/*.log
+      - /shared-logs/app.log
+    parsers:
+      - ndjson:
+          keys_under_root: true
+          add_error_key: true
+          message_key: event
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
