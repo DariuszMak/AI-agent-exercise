@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 class OllamaJudge(DeepEvalBaseLLM):
     def __init__(
         self,
-        model_name: str = "gemma2:9b",
+        model_name: str = "gemma2:2b",
         base_url: str = "http://localhost:11434",
     ) -> None:
         self.model_name = model_name
@@ -59,7 +59,7 @@ class OllamaJudge(DeepEvalBaseLLM):
 
 @pytest.fixture(scope="module")
 def eval_model() -> OllamaJudge:
-    return OllamaJudge(model_name="gemma2:9b")
+    return OllamaJudge(model_name="gemma2:2b")
 
 
 TEST_CASES = [
@@ -110,8 +110,7 @@ def test_rag_accuracy_and_grounding(
     correctness_metric = GEval(
         name="Correctness",
         criteria=(
-            "Evaluate whether actual_output conveys the same core facts as expected_output "
-            "without contradicting it."
+            "Evaluate whether actual_output conveys the same core facts as expected_output without contradicting it."
         ),
         evaluation_steps=[
             "Check if actual_output identifies the entity from input as a skyscraper or building.",
@@ -129,10 +128,7 @@ def test_rag_accuracy_and_grounding(
 
     faithfulness_metric = GEval(
         name="Context Faithfulness",
-        criteria=(
-            "Evaluate whether all factual claims in actual_output are directly supported "
-            "by retrieval_context."
-        ),
+        criteria=("Evaluate whether all factual claims in actual_output are directly supported by retrieval_context."),
         evaluation_steps=[
             "Extract the factual claims made in actual_output.",
             "Verify whether each claim is supported by the passages in retrieval_context.",
